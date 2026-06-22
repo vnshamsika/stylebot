@@ -59,6 +59,62 @@
       background: #1a1a2e; color: white;
       border-bottom-right-radius: 4px;
     }
+    #budget-bar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: white;
+      border-top: 1px solid #e8e0d8;
+      position: sticky;
+      bottom: 112px;
+    }
+    .budget-label {
+      font-size: 13px;
+      color: #888;
+      white-space: nowrap;
+    }
+    #budget-slider {
+      flex: 1;
+      accent-color: #1a1a2e;
+    }
+    #budget-display {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a1a2e;
+      min-width: 60px;
+      text-align: right;
+    }
+    #occasion-bar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      background: white;
+      border-top: 1px solid #e8e0d8;
+      position: sticky;
+      bottom: 68px;
+    }
+    .occ-btn {
+      background: #f0ebe5;
+      border: 1px solid #e8e0d8;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: inherit;
+      color: #1a1a2e;
+      transition: background 0.2s;
+    }
+    .occ-btn:hover {
+      background: #1a1a2e;
+      color: white;
+    }
     #input-area {
       width: 100%; max-width: 720px;
       display: flex; gap: 10px;
@@ -106,6 +162,20 @@
 
 <div id="chat-container"></div>
 
+<div id="budget-bar">
+  <span class="budget-label">Budget:</span>
+  <input type="range" id="budget-slider" min="500" max="10000" step="500" value="2000" oninput="updateBudget(this.value)"/>
+  <span id="budget-display">₹2,000</span>
+</div>
+
+<div id="occasion-bar">
+  <button class="occ-btn" onclick="fillOccasion('I have a wedding coming up')">👰 Wedding</button>
+  <button class="occ-btn" onclick="fillOccasion('I have a college fest coming up')">🎓 College Fest</button>
+  <button class="occ-btn" onclick="fillOccasion('I have an office meeting tomorrow')">💼 Office</button>
+  <button class="occ-btn" onclick="fillOccasion('I have a date tonight')">💕 Date</button>
+  <button class="occ-btn" onclick="fillOccasion('I have a festival celebration coming up')">🎉 Festival</button>
+</div>
+
 <div id="input-area">
   <input
     type="text"
@@ -132,6 +202,18 @@ Always consider the occasion, location, weather, budget, and Indian fashion cont
 Be warm, specific, and enthusiastic. Format clearly with each category on a new line.`;
 
   const messages = [];
+  let currentBudget = 2000;
+
+  function updateBudget(value) {
+    currentBudget = value;
+    document.getElementById("budget-display").textContent = "₹" + Number(value).toLocaleString("en-IN");
+  }
+
+  function fillOccasion(text) {
+    const input = document.getElementById("user-input");
+    input.value = text + ", budget ₹" + Number(currentBudget).toLocaleString("en-IN");
+    input.focus();
+  }
 
   function addMessage(role, text) {
     const container = document.getElementById("chat-container");
@@ -143,6 +225,39 @@ Be warm, specific, and enthusiastic. Format clearly with each category on a new 
     const bubble = document.createElement("div");
     bubble.className = `bubble ${role === "user" ? "user-bubble" : "bot-bubble"}`;
     bubble.textContent = text;
+if (role === "bot" && text.length > 100) {
+  const shareBtn = document.createElement("button");
+  shareBtn.textContent = "📤 Share this look";
+shareBtn.style.cssText = `
+    margin-top: 10px;
+    display: block;
+    background: #1a1a2e;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+  `;
+  shareBtn.onclick = async () => {
+    const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it yourself: https://illustrious-zabaione-5052cd.netlify.app";
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: "My StyleBot Look ✨",
+          text: msg
+        });
+      } catch(e) {}
+    } else {
+      navigator.clipboard.writeText(msg);
+      shareBtn.textContent = "✅ Copied! Paste anywhere";
+      setTimeout(() => shareBtn.textContent = "📤 Share this look", 2000);
+    }
+  };
+  
+  bubble.appendChild(shareBtn);
+}
     div.appendChild(avatar);
     div.appendChild(bubble);
     container.appendChild(div);
@@ -191,6 +306,11 @@ Be warm, specific, and enthusiastic. Format clearly with each category on a new 
       });
 
       const data = await response.json();
+      if (!data.choices) {
+        addMessage("bot", "API Error: " + JSON.stringify(data));
+        btn.disabled = false;
+        return;
+      }
       const reply = data.choices[0].message.content;
       messages.push({ role: "assistant", content: reply });
       removeTyping();
