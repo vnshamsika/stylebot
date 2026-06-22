@@ -4,61 +4,100 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>StyleBot — Your AI Fashion Stylist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f5f2;
+      font-family: 'Inter', sans-serif;
+      background: #faf8f5;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
     }
+
     header {
       width: 100%;
-      background: #1a1a2e;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       color: white;
-      padding: 18px 24px;
+      padding: 20px 24px;
       text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
     }
-    header h1 { font-size: 22px; font-weight: 600; }
-    header p  { font-size: 13px; opacity: 0.7; margin-top: 4px; }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
     #chat-container {
       width: 100%;
       max-width: 720px;
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 24px 16px;
+      padding: 24px 16px 16px;
       gap: 16px;
     }
+
     .message { display: flex; gap: 10px; align-items: flex-start; }
     .message.user { flex-direction: row-reverse; }
+
     .avatar {
-      width: 36px; height: 36px;
+      width: 38px; height: 38px;
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 16px; flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    .bot-avatar  { background: #1a1a2e; color: white; }
-    .user-avatar { background: #e8d5c4; color: #1a1a2e; }
+
+    .bot-avatar {
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+    }
+
+    .user-avatar {
+      background: linear-gradient(135deg, #e8d5c4, #d4b896);
+      color: #1a1a2e;
+    }
+
     .bubble {
       max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 16px;
+      padding: 14px 18px;
+      border-radius: 18px;
       font-size: 14px;
-      line-height: 1.6;
+      line-height: 1.7;
       white-space: pre-wrap;
     }
+
     .bot-bubble {
-      background: white; color: #1a1a2e;
+      background: white;
+      color: #1a1a2e;
       border-bottom-left-radius: 4px;
-      border: 1px solid #e8e0d8;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border: 1px solid #f0ebe5;
     }
+
     .user-bubble {
-      background: #1a1a2e; color: white;
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
       border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 12px rgba(15,52,96,0.3);
     }
+
     #budget-bar {
       width: 100%;
       max-width: 720px;
@@ -67,89 +106,191 @@
       gap: 12px;
       padding: 10px 16px;
       background: white;
-      border-top: 1px solid #e8e0d8;
+      border-top: 1px solid #f0ebe5;
       position: sticky;
-      bottom: 112px;
+      bottom: 116px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
     }
+
     .budget-label {
-      font-size: 13px;
+      font-size: 12px;
       color: #888;
       white-space: nowrap;
+      font-weight: 500;
+      letter-spacing: 0.3px;
     }
+
     #budget-slider {
       flex: 1;
-      accent-color: #1a1a2e;
+      accent-color: #0f3460;
     }
+
     #budget-display {
       font-size: 13px;
       font-weight: 600;
-      color: #1a1a2e;
-      min-width: 60px;
+      color: #0f3460;
+      min-width: 65px;
       text-align: right;
     }
+
     #occasion-bar {
       width: 100%;
       max-width: 720px;
       display: flex;
       gap: 8px;
-      padding: 12px 16px;
+      padding: 10px 16px;
       overflow-x: auto;
       background: white;
-      border-top: 1px solid #e8e0d8;
+      border-top: 1px solid #f0ebe5;
       position: sticky;
       bottom: 68px;
+      scrollbar-width: none;
     }
+
+    #occasion-bar::-webkit-scrollbar { display: none; }
+
     .occ-btn {
-      background: #f0ebe5;
-      border: 1px solid #e8e0d8;
+      background: #faf8f5;
+      border: 1.5px solid #e8e0d8;
       border-radius: 20px;
-      padding: 8px 16px;
-      font-size: 13px;
+      padding: 7px 14px;
+      font-size: 12px;
       cursor: pointer;
       white-space: nowrap;
-      font-family: inherit;
+      font-family: 'Inter', sans-serif;
       color: #1a1a2e;
-      transition: background 0.2s;
+      font-weight: 500;
+      transition: all 0.2s;
+      letter-spacing: 0.2px;
     }
+
     .occ-btn:hover {
       background: #1a1a2e;
       color: white;
+      border-color: #1a1a2e;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(26,26,46,0.2);
     }
+
     #input-area {
-      width: 100%; max-width: 720px;
-      display: flex; gap: 10px;
-      padding: 16px;
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      gap: 10px;
+      padding: 12px 16px;
       background: white;
-      border-top: 1px solid #e8e0d8;
-      position: sticky; bottom: 0;
+      border-top: 1px solid #f0ebe5;
+      position: sticky;
+      bottom: 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
     }
+
     #user-input {
-      flex: 1; padding: 12px 16px;
-      border: 1px solid #ddd;
+      flex: 1;
+      padding: 12px 18px;
+      border: 1.5px solid #e8e0d8;
       border-radius: 24px;
-      font-size: 14px; outline: none;
-      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      background: #faf8f5;
+      color: #1a1a2e;
+      transition: border-color 0.2s;
     }
-    #user-input:focus { border-color: #1a1a2e; }
+
+    #user-input:focus {
+      border-color: #0f3460;
+      background: white;
+    }
+
     #send-btn {
-      background: #1a1a2e; color: white;
-      border: none; border-radius: 24px;
-      padding: 12px 20px; font-size: 14px;
-      cursor: pointer; font-family: inherit;
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 22px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s;
+      box-shadow: 0 2px 10px rgba(15,52,96,0.3);
     }
-    #send-btn:hover    { background: #2d2d4e; }
-    #send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .typing { display: flex; gap: 4px; padding: 14px 16px; align-items: center; }
+
+    #send-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(15,52,96,0.4);
+    }
+
+    #send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .typing {
+      display: flex;
+      gap: 5px;
+      padding: 16px 18px;
+      align-items: center;
+    }
+
     .typing span {
       width: 7px; height: 7px;
-      background: #aaa; border-radius: 50%;
+      background: #c8bfb5;
+      border-radius: 50%;
       animation: bounce 1.2s infinite;
     }
+
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
+
     @keyframes bounce {
       0%, 60%, 100% { transform: translateY(0); }
       30%            { transform: translateY(-6px); }
+    }
+
+    .share-btn {
+      margin-top: 10px;
+      display: inline-block;
+      background: #f0ebe5;
+      color: #1a1a2e;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .share-btn:hover {
+      background: #1a1a2e;
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    /* Welcome card */
+    .welcome-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      border-radius: 16px;
+      padding: 20px;
+      color: white;
+      margin: 8px 0;
+      text-align: center;
+    }
+
+    .welcome-card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .welcome-card p {
+      font-size: 13px;
+      opacity: 0.8;
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -157,13 +298,13 @@
 
 <header>
   <h1>✨ StyleBot</h1>
-  <p>Your AI fashion stylist — describe your occasion and get a complete look</p>
+  <p>YOUR PERSONAL AI FASHION STYLIST</p>
 </header>
 
 <div id="chat-container"></div>
 
 <div id="budget-bar">
-  <span class="budget-label">Budget:</span>
+  <span class="budget-label">💰 Budget</span>
   <input type="range" id="budget-slider" min="500" max="10000" step="500" value="2000" oninput="updateBudget(this.value)"/>
   <span id="budget-display">₹2,000</span>
 </div>
@@ -174,13 +315,15 @@
   <button class="occ-btn" onclick="fillOccasion('I have an office meeting tomorrow')">💼 Office</button>
   <button class="occ-btn" onclick="fillOccasion('I have a date tonight')">💕 Date</button>
   <button class="occ-btn" onclick="fillOccasion('I have a festival celebration coming up')">🎉 Festival</button>
+  <button class="occ-btn" onclick="fillOccasion('I have a casual outing with friends')">👯 Casual</button>
+  <button class="occ-btn" onclick="fillOccasion('I have a job interview tomorrow')">🤝 Interview</button>
 </div>
 
 <div id="input-area">
   <input
     type="text"
     id="user-input"
-    placeholder="E.g. I have a wedding in Hyderabad next week, budget ₹3000..."
+    placeholder="Describe your occasion, city, budget..."
     onkeydown="if(event.key==='Enter') sendMessage()"
   />
   <button id="send-btn" onclick="sendMessage()">Send ✈</button>
@@ -225,39 +368,26 @@ Be warm, specific, and enthusiastic. Format clearly with each category on a new 
     const bubble = document.createElement("div");
     bubble.className = `bubble ${role === "user" ? "user-bubble" : "bot-bubble"}`;
     bubble.textContent = text;
-if (role === "bot" && text.length > 100) {
-  const shareBtn = document.createElement("button");
-  shareBtn.textContent = "📤 Share this look";
-shareBtn.style.cssText = `
-    margin-top: 10px;
-    display: block;
-    background: #1a1a2e;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: inherit;
-  `;
-  shareBtn.onclick = async () => {
-    const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it yourself: https://illustrious-zabaione-5052cd.netlify.app";
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "My StyleBot Look ✨",
-          text: msg
-        });
-      } catch(e) {}
-    } else {
-      navigator.clipboard.writeText(msg);
-      shareBtn.textContent = "✅ Copied! Paste anywhere";
-      setTimeout(() => shareBtn.textContent = "📤 Share this look", 2000);
+
+    if (role === "bot" && text.length > 100) {
+      const shareBtn = document.createElement("button");
+      shareBtn.className = "share-btn";
+      shareBtn.textContent = "📤 Share this look";
+      shareBtn.onclick = async () => {
+        const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it yourself: https://illustrious-zabaione-5052cd.netlify.app";
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: "My StyleBot Look ✨", text: msg });
+          } catch(e) {}
+        } else {
+          navigator.clipboard.writeText(msg);
+          shareBtn.textContent = "✅ Copied! Paste anywhere";
+          setTimeout(() => shareBtn.textContent = "📤 Share this look", 2000);
+        }
+      };
+      bubble.appendChild(shareBtn);
     }
-  };
-  
-  bubble.appendChild(shareBtn);
-}
+
     div.appendChild(avatar);
     div.appendChild(bubble);
     container.appendChild(div);
@@ -325,7 +455,7 @@ shareBtn.style.cssText = `
     input.focus();
   }
 
-  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nTell me about your occasion — where are you going, what's the event, your budget, and I'll give you a complete look from head to toe! 💃");
+  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nTell me about your occasion — where are you going, what's the event, your budget, and I'll give you a complete look from head to toe! 💃\n\nOr tap an occasion button below to get started instantly! ✨");
 </script>
 
 </body>
