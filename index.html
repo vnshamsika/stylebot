@@ -117,8 +117,6 @@
 </div>
 
 <script>
-  const API_KEY = "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";
-
   const systemPrompt = `You are StyleBot, an expert Indian fashion stylist AI.
 
 When a user describes their occasion, location, weather, or budget, you give them a complete head-to-toe look recommendation including:
@@ -186,20 +184,10 @@ Be warm, specific, and enthusiastic. Format clearly with each category on a new 
     addTyping();
 
     try {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const response = await fetch("/.netlify/functions/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + API_KEY
-        },
-        body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
-          max_tokens: 1000,
-          messages: [
-            { role: "system", content: systemPrompt },
-            ...messages
-          ]
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages, systemPrompt })
       });
 
       const data = await response.json();
