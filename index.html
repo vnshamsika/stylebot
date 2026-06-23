@@ -103,6 +103,21 @@
       transition: all 0.2s;
     }
     .personal-select:focus { border-color: #1a1a2e; }
+    #city-input {
+      width: 120px;
+      background: #faf8f5;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: #1a1a2e;
+      outline: none;
+      transition: all 0.2s;
+    }
+    #city-input:focus { border-color: #1a1a2e; }
+    #city-input::placeholder { color: #aaa; }
     #gender-bar {
       width: 100%; max-width: 720px;
       display: flex; align-items: center; gap: 8px;
@@ -235,26 +250,21 @@
 <div id="chat-container"></div>
 
 <div id="personal-bar">
-  <select id="city-select" class="personal-select">
-    <option value="">🏙️ City</option>
-    <option value="Hyderabad">Hyderabad</option>
-    <option value="Mumbai">Mumbai</option>
-    <option value="Delhi">Delhi</option>
-    <option value="Bangalore">Bangalore</option>
-    <option value="Chennai">Chennai</option>
-    <option value="Kolkata">Kolkata</option>
-    <option value="Pune">Pune</option>
-    <option value="Jaipur">Jaipur</option>
-    <option value="Ahmedabad">Ahmedabad</option>
-    <option value="Kochi">Kochi</option>
-    <option value="Khammam">Khammam</option>
-  </select>
-  <select id="skin-select" class="personal-select">
+  <input type="text" id="city-input" placeholder="🏙️ Type your city"/>
+  <select id="skin-tone-select" class="personal-select">
     <option value="">🎨 Skin Tone</option>
     <option value="fair">Fair</option>
     <option value="wheatish">Wheatish</option>
     <option value="dusky">Dusky</option>
     <option value="dark">Dark</option>
+  </select>
+  <select id="skin-type-select" class="personal-select">
+    <option value="">💧 Skin Type</option>
+    <option value="oily">Oily</option>
+    <option value="dry">Dry</option>
+    <option value="combination">Combination</option>
+    <option value="sensitive">Sensitive</option>
+    <option value="normal">Normal</option>
   </select>
   <select id="body-select" class="personal-select">
     <option value="">👤 Body Type</option>
@@ -338,17 +348,15 @@ STRICT RULES FOR KIDS FASHION:
 - Kids outfits: frocks, lehenga choli (girls), kurta pyjama (boys), shirts, jeans, dungarees, dresses etc
 - Kids footwear: comfortable shoes, sandals, sneakers, floaters — always comfortable and safe
 - Kids accessories: hair clips, bows, headbands (girls), caps, belts (boys) — simple and safe only
-- Always consider comfort and safety — no tight fitting, no heavy embellishments for small kids
+- Always consider comfort and safety
 - Suggest breathable fabrics like cotton for Indian weather
 
 CONVERSATION RULES:
-1. If they describe an occasion or ask for a complete outfit — give full recommendation including outfit, footwear and accessories.
-2. If they ask ONLY about one thing like "what color?" or "what shoes?" — answer ONLY that specific question.
-3. If they ask follow ups — respond naturally to that specific request.
-4. Always ask or consider the child's age group — toddler (1-3), kids (4-8), preteen (9-12) — and suggest accordingly.
-5. Always consider occasion, season, comfort, budget, and Indian kids fashion context.
-6. Be fun, practical and parent-friendly.
-7. Never suggest anything uncomfortable, unsafe or age inappropriate.`
+1. If they describe an occasion or ask for a complete outfit — give full recommendation.
+2. If they ask ONLY about one thing — answer ONLY that.
+3. Always consider child's age group — toddler (1-3), kids (4-8), preteen (9-12).
+4. Be fun, practical and parent-friendly.
+5. Never suggest anything uncomfortable or age inappropriate.`
   };
 
   const occasions = {
@@ -402,45 +410,86 @@ CONVERSATION RULES:
     });
   }
 
+  // ── Budget sync ──────────────────────────────────
   function updateBudget(value) {
-    currentBudget = value;
-    document.getElementById("budget-input").value = value;
-    updateDescribeBox();
+    currentBudget = parseInt(value);
+    document.getElementById("budget-input").value = currentBudget;
+    syncBudgetToDescribe();
   }
 
   function updateBudgetFromInput(value) {
-    if (value >= 500 && value <= 10000) {
-      currentBudget = value;
-      document.getElementById("budget-slider").value = value;
-      updateDescribeBox();
+    const v = parseInt(value);
+    if (v >= 500 && v <= 10000) {
+      currentBudget = v;
+      document.getElementById("budget-slider").value = currentBudget;
+      syncBudgetToDescribe();
     }
   }
 
-  function updateDescribeBox() {
+  function syncBudgetToDescribe() {
     const input = document.getElementById("user-input");
     if (input.value.includes("budget ₹")) {
       input.value = input.value.replace(
         /budget ₹[\d,]+/,
-        "budget ₹" + Number(currentBudget).toLocaleString("en-IN")
+        "budget ₹" + currentBudget.toLocaleString("en-IN")
       );
     }
   }
 
-  function fillOccasion(text) {
+  // ── Describe box sync ────────────────────────────
+  function rebuildDescribe() {
     const input = document.getElementById("user-input");
-    const city = document.getElementById("city-select").value;
-    const skin = document.getElementById("skin-select").value;
-    const body = document.getElementById("body-select").value;
+    if (!input.value) return;
 
-    let details = text + ", budget ₹" + Number(currentBudget).toLocaleString("en-IN");
-    if (city) details += ", in " + city;
-    if (skin) details += ", skin tone: " + skin;
-    if (body) details += ", body type: " + body;
+    const city     = document.getElementById("city-input").value.trim();
+    const skinTone = document.getElementById("skin-tone-select").value;
+    const body     = document.getElementById("body-select").value;
+
+    // Strip old appended details, keep the occasion part only
+    let base = input.value
+      .replace(/, budget ₹[\d,]+.*$/, "")
+      .trim();
+
+    // Rebuild with fresh values
+    base += ", budget ₹" + currentBudget.toLocaleString("en-IN");
+    if (city)     base += ", in " + city;
+    if (skinTone) base += ", skin tone: " + skinTone;
+    if (body)     base += ", body type: " + body;
+
+    input.value = base;
+  }
+
+  // ── Fill from occasion button ────────────────────
+  function fillOccasion(text) {
+    const input    = document.getElementById("user-input");
+    const city     = document.getElementById("city-input").value.trim();
+    const skinTone = document.getElementById("skin-tone-select").value;
+    const body     = document.getElementById("body-select").value;
+
+    let details = text + ", budget ₹" + currentBudget.toLocaleString("en-IN");
+    if (city)     details += ", in " + city;
+    if (skinTone) details += ", skin tone: " + skinTone;
+    if (body)     details += ", body type: " + body;
 
     input.value = details;
     input.focus();
   }
 
+  // ── Skin type → invisible AI context ────────────
+  function getSkinTypePrompt() {
+    const skinType = document.getElementById("skin-type-select").value;
+    if (!skinType) return "";
+    const tips = {
+      oily:        "suggest matte finish, oil-free, non-comedogenic makeup products",
+      dry:         "suggest hydrating, moisturizing, dewy finish makeup products",
+      combination: "suggest oil-control on T-zone, hydration on dry areas",
+      sensitive:   "suggest fragrance-free, hypoallergenic, gentle makeup products only",
+      normal:      "suggest balanced, gentle products suitable for normal skin"
+    };
+    return `\n\nUser's skin type is ${skinType}. For makeup: ${tips[skinType]}.`;
+  }
+
+  // ── Messages ─────────────────────────────────────
   function addMessage(role, text) {
     const container = document.getElementById("chat-container");
     const div = document.createElement("div");
@@ -457,14 +506,12 @@ CONVERSATION RULES:
       shareBtn.className = "share-btn";
       shareBtn.textContent = "📤 Share this look";
       shareBtn.onclick = async () => {
-        const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it yourself: https://stylebot-three.vercel.app";
+        const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it: https://stylebot-three.vercel.app";
         if (navigator.share) {
-          try {
-            await navigator.share({ title: "My StyleBot Look ✨", text: msg });
-          } catch(e) {}
+          try { await navigator.share({ title: "My StyleBot Look ✨", text: msg }); } catch(e) {}
         } else {
           navigator.clipboard.writeText(msg);
-          shareBtn.textContent = "✅ Copied! Paste anywhere";
+          shareBtn.textContent = "✅ Copied!";
           setTimeout(() => shareBtn.textContent = "📤 Share this look", 2000);
         }
       };
@@ -499,6 +546,7 @@ CONVERSATION RULES:
     if (el) el.remove();
   }
 
+  // ── Send message ─────────────────────────────────
   async function sendMessage() {
     const input = document.getElementById("user-input");
     const btn   = document.getElementById("send-btn");
@@ -517,7 +565,7 @@ CONVERSATION RULES:
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages,
-          systemPrompt: systemPrompts[currentGender],
+          systemPrompt: systemPrompts[currentGender] + getSkinTypePrompt(),
           userId: "anonymous",
           gender: currentGender,
           userMessage: text
@@ -544,9 +592,11 @@ CONVERSATION RULES:
     input.focus();
   }
 
+  // ── Event listeners ──────────────────────────────
+
+  // Typing budget in describe box → sync slider + number input
   document.getElementById("user-input").addEventListener("input", function() {
-    const text = this.value;
-    const match = text.match(/₹\s?(\d+)/);
+    const match = this.value.match(/₹\s?(\d+)/);
     if (match) {
       const amount = parseInt(match[1]);
       if (amount >= 500 && amount <= 10000) {
@@ -557,8 +607,14 @@ CONVERSATION RULES:
     }
   });
 
+  // City, skin tone, body type → sync describe box
+  document.getElementById("city-input").addEventListener("input", rebuildDescribe);
+  document.getElementById("skin-tone-select").addEventListener("change", rebuildDescribe);
+  document.getElementById("body-select").addEventListener("change", rebuildDescribe);
+
+  // ── Init ─────────────────────────────────────────
   renderOccasions();
-  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nSelect your city, skin tone, body type, pick an occasion, set your budget and I'll give you a complete personalized look! ✨");
+  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city, select skin tone, skin type and body type, pick an occasion, set your budget and I'll give you a complete personalized look from head to toe! ✨");
 </script>
 
 </body>
