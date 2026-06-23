@@ -188,6 +188,7 @@
       header h1 { font-size: 20px; }
       header p { font-size: 11px; }
       .bubble { max-width: 90%; font-size: 13px; padding: 12px 14px; }
+      #personal-bar { padding: 8px 12px; bottom: 180px; }
       #gender-bar { padding: 8px 12px; bottom: 144px; }
       #budget-bar { padding: 8px 12px; bottom: 108px; }
       #occasion-bar { padding: 8px 12px; gap: 6px; bottom: 62px; }
@@ -197,6 +198,36 @@
       #send-btn { padding: 10px 16px; font-size: 13px; }
       #chat-container { padding: 16px 12px; }
     }
+    #personal-bar {
+  width: 100%; max-width: 720px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 16px; background: white;
+  border-top: 1px solid #f0ebe5;
+  position: sticky; bottom: 188px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+#personal-bar::-webkit-scrollbar { display: none; }
+
+.personal-select {
+  background: #faf8f5;
+  border: 1.5px solid #e8e0d8;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #1a1a2e;
+  outline: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.personal-select:focus {
+  border-color: #1a1a2e;
+}
   </style>
 </head>
 <body>
@@ -207,6 +238,38 @@
 </header>
 
 <div id="chat-container"></div>
+<div id="personal-bar">
+  <select id="city-select" class="personal-select">
+    <option value="">🏙️ City</option>
+    <option value="Hyderabad">Hyderabad</option>
+    <option value="Mumbai">Mumbai</option>
+    <option value="Delhi">Delhi</option>
+    <option value="Bangalore">Bangalore</option>
+    <option value="Chennai">Chennai</option>
+    <option value="Kolkata">Kolkata</option>
+    <option value="Pune">Pune</option>
+    <option value="Jaipur">Jaipur</option>
+    <option value="Ahmedabad">Ahmedabad</option>
+    <option value="Kochi">Kochi</option>
+  </select>
+
+  <select id="skin-select" class="personal-select">
+    <option value="">🎨 Skin Tone</option>
+    <option value="fair">Fair</option>
+    <option value="wheatish">Wheatish</option>
+    <option value="dusky">Dusky</option>
+    <option value="dark">Dark</option>
+  </select>
+
+  <select id="body-select" class="personal-select">
+    <option value="">👤 Body Type</option>
+    <option value="slim">Slim</option>
+    <option value="athletic">Athletic</option>
+    <option value="average">Average</option>
+    <option value="curvy">Curvy</option>
+    <option value="plus size">Plus Size</option>
+  </select>
+</div>
 
 <div id="gender-bar">
   <span class="gender-label">Shopping for:</span>
@@ -379,6 +442,20 @@ CONVERSATION RULES:
       }
     }
   });
+  function fillOccasion(text) {
+    const input = document.getElementById("user-input");
+    const city = document.getElementById("city-select").value;
+    const skin = document.getElementById("skin-select").value;
+    const body = document.getElementById("body-select").value;
+
+    let details = text + ", budget ₹" + Number(currentBudget).toLocaleString("en-IN");
+    if (city) details += ", in " + city;
+    if (skin) details += ", skin tone: " + skin;
+    if (body) details += ", body type: " + body;
+
+    input.value = details;
+    input.focus();
+  }
 
   function addMessage(role, text) {
     const container = document.getElementById("chat-container");
