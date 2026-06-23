@@ -357,10 +357,24 @@ CONVERSATION RULES:
   }
 
   function fillOccasion(text) {
+    function fillOccasion(text) {
     const input = document.getElementById("user-input");
     input.value = text + ", budget ₹" + Number(currentBudget).toLocaleString("en-IN");
     input.focus();
   }
+
+  document.getElementById("user-input").addEventListener("input", function() {
+    const text = this.value;
+    const match = text.match(/₹\s?(\d+)/);
+    if (match) {
+      const amount = parseInt(match[1]);
+      if (amount >= 500 && amount <= 10000) {
+        currentBudget = amount;
+        document.getElementById("budget-slider").value = amount;
+        document.getElementById("budget-input").value = amount;
+      }
+    }
+  });
 
   function addMessage(role, text) {
     const container = document.getElementById("chat-container");
