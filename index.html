@@ -1,4 +1,334 @@
-const systemPrompts = {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StyleBot — Your AI Fashion Stylist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #faf8f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    header {
+      width: 100%;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      padding: 20px 24px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    header p {
+      font-size: 12px;
+      opacity: 0.7;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+    #chat-container {
+      width: 100%;
+      max-width: 720px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px 16px;
+      gap: 16px;
+    }
+    .message { display: flex; gap: 10px; align-items: flex-start; }
+    .message.user { flex-direction: row-reverse; }
+    .avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .bot-avatar {
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+    }
+    .user-avatar {
+      background: linear-gradient(135deg, #e8d5c4, #d4b896);
+      color: #1a1a2e;
+    }
+    .bubble {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+    .bot-bubble {
+      background: white;
+      color: #1a1a2e;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border: 1px solid #f0ebe5;
+    }
+    .user-bubble {
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+      border-bottom-right-radius: 4px;
+      box-shadow: 0 2px 12px rgba(15,52,96,0.3);
+    }
+    #gender-bar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: white;
+      border-top: 1px solid #f0ebe5;
+      position: sticky;
+      bottom: 152px;
+    }
+    .gender-label {
+      font-size: 12px;
+      color: #888;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .gender-btn {
+      background: #faf8f5;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: #1a1a2e;
+      transition: all 0.2s;
+    }
+    .gender-btn.active {
+      background: #1a1a2e;
+      color: white;
+      border-color: #1a1a2e;
+    }
+    .gender-btn:hover {
+      background: #1a1a2e;
+      color: white;
+      border-color: #1a1a2e;
+    }
+    #budget-bar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: white;
+      border-top: 1px solid #f0ebe5;
+      position: sticky;
+      bottom: 116px;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+    }
+    .budget-label {
+      font-size: 12px;
+      color: #888;
+      white-space: nowrap;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    #budget-slider {
+      flex: 1;
+      accent-color: #0f3460;
+    }
+    #budget-display {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f3460;
+      min-width: 65px;
+      text-align: right;
+    }
+    #occasion-bar {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px;
+      overflow-x: auto;
+      background: white;
+      border-top: 1px solid #f0ebe5;
+      position: sticky;
+      bottom: 68px;
+      scrollbar-width: none;
+    }
+    #occasion-bar::-webkit-scrollbar { display: none; }
+    .occ-btn {
+      background: #faf8f5;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: 'Inter', sans-serif;
+      color: #1a1a2e;
+      font-weight: 500;
+      transition: all 0.2s;
+      letter-spacing: 0.2px;
+    }
+    .occ-btn:hover {
+      background: #1a1a2e;
+      color: white;
+      border-color: #1a1a2e;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(26,26,46,0.2);
+    }
+    #input-area {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      gap: 10px;
+      padding: 12px 16px;
+      background: white;
+      border-top: 1px solid #f0ebe5;
+      position: sticky;
+      bottom: 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    }
+    #user-input {
+      flex: 1;
+      padding: 12px 18px;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 24px;
+      font-size: 14px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      background: #faf8f5;
+      color: #1a1a2e;
+      transition: border-color 0.2s;
+    }
+    #user-input:focus {
+      border-color: #0f3460;
+      background: white;
+    }
+    #send-btn {
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 12px 22px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s;
+      box-shadow: 0 2px 10px rgba(15,52,96,0.3);
+    }
+    #send-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(15,52,96,0.4);
+    }
+    #send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .typing {
+      display: flex;
+      gap: 5px;
+      padding: 16px 18px;
+      align-items: center;
+    }
+    .typing span {
+      width: 7px; height: 7px;
+      background: #c8bfb5;
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 60%, 100% { transform: translateY(0); }
+      30%            { transform: translateY(-6px); }
+    }
+    .share-btn {
+      margin-top: 10px;
+      display: inline-block;
+      background: #f0ebe5;
+      color: #1a1a2e;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .share-btn:hover {
+      background: #1a1a2e;
+      color: white;
+      transform: translateY(-1px);
+    }
+    @media (max-width: 600px) {
+      header h1 { font-size: 20px; }
+      header p { font-size: 11px; }
+      .bubble { max-width: 90%; font-size: 13px; padding: 12px 14px; }
+      #gender-bar { padding: 8px 12px; bottom: 144px; }
+      #budget-bar { padding: 8px 12px; bottom: 108px; }
+      #occasion-bar { padding: 8px 12px; gap: 6px; bottom: 62px; }
+      .occ-btn { padding: 6px 12px; font-size: 11px; }
+      #input-area { padding: 10px 12px; }
+      #user-input { font-size: 13px; padding: 10px 14px; }
+      #send-btn { padding: 10px 16px; font-size: 13px; }
+      #chat-container { padding: 16px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>✨ StyleBot</h1>
+  <p>YOUR PERSONAL AI FASHION STYLIST</p>
+</header>
+
+<div id="chat-container"></div>
+
+<div id="gender-bar">
+  <span class="gender-label">Shopping for:</span>
+  <button class="gender-btn active" id="btn-women" onclick="setGender('women', this)">👩 Women</button>
+  <button class="gender-btn" id="btn-men" onclick="setGender('men', this)">👨 Men</button>
+  <button class="gender-btn" id="btn-kids" onclick="setGender('kids', this)">👦 Kids</button>
+</div>
+
+<div id="budget-bar">
+  <span class="budget-label">💰 Budget</span>
+  <input type="range" id="budget-slider" min="500" max="10000" step="500" value="2000" oninput="updateBudget(this.value)"/>
+  <span id="budget-display">₹2,000</span>
+</div>
+
+<div id="occasion-bar"></div>
+
+<div id="input-area">
+  <input
+    type="text"
+    id="user-input"
+    placeholder="Describe your occasion, city, budget..."
+    onkeydown="if(event.key==='Enter') sendMessage()"
+  />
+  <button id="send-btn" onclick="sendMessage()">Send ✈</button>
+</div>
+
+<script>
+  const systemPrompts = {
     women: `You are StyleBot, a warm and expert Indian fashion stylist AI for women.
 
 STRICT RULES FOR WOMEN'S FASHION:
@@ -56,3 +386,169 @@ CONVERSATION RULES:
 6. Be fun, practical and parent-friendly.
 7. Never suggest anything uncomfortable, unsafe or age inappropriate.`
   };
+
+  const occasions = {
+    women: [
+      { label: "👰 Wedding", text: "I have a wedding coming up" },
+      { label: "🎓 College Fest", text: "I have a college fest coming up" },
+      { label: "💼 Office", text: "I have an office meeting tomorrow" },
+      { label: "💕 Date", text: "I have a date tonight" },
+      { label: "🎉 Festival", text: "I have a festival celebration coming up" },
+      { label: "👯 Casual", text: "I have a casual outing with friends" },
+      { label: "🤝 Interview", text: "I have a job interview tomorrow" }
+    ],
+    men: [
+      { label: "💍 Wedding", text: "I have a wedding coming up, I am a man" },
+      { label: "🎓 College Fest", text: "I have a college fest coming up, I am a guy" },
+      { label: "💼 Office", text: "I have an office meeting tomorrow, I am a man" },
+      { label: "💕 Date", text: "I have a date tonight, I am a guy" },
+      { label: "🎉 Festival", text: "I have a festival celebration, I am a man" },
+      { label: "👔 Formal", text: "I have a formal event, I am a man" },
+      { label: "🤝 Interview", text: "I have a job interview tomorrow, I am a man" }
+    ],
+    kids: [
+      { label: "💍 Wedding", text: "I need an outfit for my child for a wedding" },
+      { label: "🎒 School", text: "I need a casual outfit for my child for school" },
+      { label: "🎉 Birthday", text: "I need an outfit for my child's birthday party" },
+      { label: "🎓 Annual Day", text: "I need an outfit for my child's school annual day" },
+      { label: "🪔 Festival", text: "I need a festival outfit for my child" }
+    ]
+  };
+
+  const messages = [];
+  let currentBudget = 2000;
+  let currentGender = "women";
+
+  function setGender(gender, btn) {
+    currentGender = gender;
+    document.querySelectorAll(".gender-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderOccasions();
+  }
+
+  function renderOccasions() {
+    const bar = document.getElementById("occasion-bar");
+    bar.innerHTML = "";
+    occasions[currentGender].forEach(occ => {
+      const btn = document.createElement("button");
+      btn.className = "occ-btn";
+      btn.textContent = occ.label;
+      btn.onclick = () => fillOccasion(occ.text);
+      bar.appendChild(btn);
+    });
+  }
+
+  function updateBudget(value) {
+    currentBudget = value;
+    document.getElementById("budget-display").textContent = "₹" + Number(value).toLocaleString("en-IN");
+  }
+
+  function fillOccasion(text) {
+    const input = document.getElementById("user-input");
+    input.value = text + ", budget ₹" + Number(currentBudget).toLocaleString("en-IN");
+    input.focus();
+  }
+
+  function addMessage(role, text) {
+    const container = document.getElementById("chat-container");
+    const div = document.createElement("div");
+    div.className = `message ${role}`;
+    const avatar = document.createElement("div");
+    avatar.className = `avatar ${role === "user" ? "user-avatar" : "bot-avatar"}`;
+    avatar.textContent = role === "user" ? "👤" : "✨";
+    const bubble = document.createElement("div");
+    bubble.className = `bubble ${role === "user" ? "user-bubble" : "bot-bubble"}`;
+    bubble.textContent = text;
+
+    if (role === "bot" && text.length > 100) {
+      const shareBtn = document.createElement("button");
+      shareBtn.className = "share-btn";
+      shareBtn.textContent = "📤 Share this look";
+      shareBtn.onclick = async () => {
+        const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it yourself: https://illustrious-zabaione-5052cd.netlify.app";
+        if (navigator.share) {
+          try {
+            await navigator.share({ title: "My StyleBot Look ✨", text: msg });
+          } catch(e) {}
+        } else {
+          navigator.clipboard.writeText(msg);
+          shareBtn.textContent = "✅ Copied! Paste anywhere";
+          setTimeout(() => shareBtn.textContent = "📤 Share this look", 2000);
+        }
+      };
+      bubble.appendChild(shareBtn);
+    }
+
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function addTyping() {
+    const container = document.getElementById("chat-container");
+    const div = document.createElement("div");
+    div.className = "message bot";
+    div.id = "typing-indicator";
+    const avatar = document.createElement("div");
+    avatar.className = "avatar bot-avatar";
+    avatar.textContent = "✨";
+    const bubble = document.createElement("div");
+    bubble.className = "bubble bot-bubble typing";
+    bubble.innerHTML = "<span></span><span></span><span></span>";
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function removeTyping() {
+    const el = document.getElementById("typing-indicator");
+    if (el) el.remove();
+  }
+
+  async function sendMessage() {
+    const input = document.getElementById("user-input");
+    const btn   = document.getElementById("send-btn");
+    const text  = input.value.trim();
+    if (!text) return;
+
+    addMessage("user", text);
+    messages.push({ role: "user", content: text });
+    input.value = "";
+    btn.disabled = true;
+    addTyping();
+
+    try {
+      const response = await fetch("/.netlify/functions/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages, systemPrompt: systemPrompts[currentGender] })
+      });
+
+      const data = await response.json();
+      if (!data.choices) {
+        addMessage("bot", "API Error: " + JSON.stringify(data));
+        btn.disabled = false;
+        return;
+      }
+      const reply = data.choices[0].message.content;
+      messages.push({ role: "assistant", content: reply });
+      removeTyping();
+      addMessage("bot", reply);
+
+    } catch (err) {
+      removeTyping();
+      addMessage("bot", "Sorry, something went wrong. Please try again!");
+    }
+
+    btn.disabled = false;
+    input.focus();
+  }
+
+  renderOccasions();
+  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nSelect who you're shopping for above, pick an occasion, set your budget and I'll give you a complete look from head to toe! ✨");
+</script>
+
+</body>
+</html>
