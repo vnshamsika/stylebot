@@ -357,7 +357,11 @@ CONVERSATION RULES:
   }
 
   function fillOccasion(text) {
-    function fillOccasion(text) {
+    const input = document.getElementById("user-input");
+    input.value = text + ", budget ₹" + Number(currentBudget).toLocaleString("en-IN");
+    input.focus();
+  }
+  function fillOccasion(text) {
     const input = document.getElementById("user-input");
     input.value = text + ", budget ₹" + Number(currentBudget).toLocaleString("en-IN");
     input.focus();
