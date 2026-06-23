@@ -359,7 +359,7 @@ CONVERSATION RULES:
       shareBtn.className = "share-btn";
       shareBtn.textContent = "📤 Share this look";
       shareBtn.onclick = async () => {
-        const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it yourself: https://illustrious-zabaione-5052cd.netlify.app";
+        const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it yourself: https://stylebot-three.vercel.app";
         if (navigator.share) {
           try {
             await navigator.share({ title: "My StyleBot Look ✨", text: msg });
@@ -414,7 +414,7 @@ CONVERSATION RULES:
     addTyping();
 
     try {
-      const response = await fetch("/.netlify/functions/chat", {
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
