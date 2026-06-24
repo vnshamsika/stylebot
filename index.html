@@ -987,9 +987,15 @@ CONVERSATION RULES:
   const savedToken = localStorage.getItem("sb_token");
   const savedUser  = localStorage.getItem("sb_user");
   if (savedToken && savedUser) {
-    currentToken = savedToken;
-    currentUser  = JSON.parse(savedUser);
-    document.getElementById("auth-btn").textContent = "👤 " + currentUser.email.split("@")[0];
+    try {
+      currentToken = savedToken;
+      currentUser  = JSON.parse(savedUser);
+      document.getElementById("auth-btn").textContent = "👤 " + currentUser.email.split("@")[0];
+      console.log("Restored session for:", currentUser.email);
+    } catch(e) {
+      localStorage.removeItem("sb_token");
+      localStorage.removeItem("sb_user");
+    }
   }
 
   // ── Init ──────────────────────────────────────────
