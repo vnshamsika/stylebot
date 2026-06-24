@@ -596,9 +596,9 @@ CONVERSATION RULES:
 
   // Typing budget in describe box → sync slider + number input
   document.getElementById("user-input").addEventListener("input", function() {
-    const match = this.value.match(/₹\s?(\d+)/);
+    const match = this.value.match(/₹\s?([\d,]+)/);
     if (match) {
-      const amount = parseInt(match[1]);
+      const amount = parseInt(match[1].replace(/,/g, ""));
       if (amount >= 500 && amount <= 10000) {
         currentBudget = amount;
         document.getElementById("budget-slider").value = amount;
