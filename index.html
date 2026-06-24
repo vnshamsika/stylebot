@@ -624,8 +624,15 @@ CONVERSATION RULES:
 
   // ── Auth functions ────────────────────────────────
   function openAuth() {
+    // Re-check localStorage every time button is clicked
+    const savedUser = localStorage.getItem("sb_user");
+    const savedToken = localStorage.getItem("sb_token");
+    if (savedUser && savedToken) {
+      currentUser = JSON.parse(savedUser);
+      currentToken = savedToken;
+    }
+
     if (currentUser) {
-      // Already logged in — show options
       const action = confirm(`Logged in as ${currentUser.email}\n\nClick OK to view your style history\nClick Cancel to logout`);
       if (action) {
         openHistory();
