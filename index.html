@@ -41,12 +41,13 @@
       margin-top: 2px;
       letter-spacing: 0.5px;
     }
-    #auth-btn {
+    .header-btns { display: flex; gap: 8px; align-items: center; }
+    .hdr-btn {
       background: rgba(255,255,255,0.15);
       color: white;
       border: 1.5px solid rgba(255,255,255,0.3);
       border-radius: 20px;
-      padding: 8px 16px;
+      padding: 8px 14px;
       font-size: 12px;
       cursor: pointer;
       font-family: 'Inter', sans-serif;
@@ -54,7 +55,8 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-    #auth-btn:hover { background: rgba(255,255,255,0.25); }
+    .hdr-btn:hover { background: rgba(255,255,255,0.25); }
+    .hdr-btn.danger { border-color: rgba(231,76,60,0.5); color: #ff8a80; }
 
     /* Modal */
     #auth-modal {
@@ -75,6 +77,7 @@
       width: 90%;
       max-width: 400px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
     }
     .modal-title {
       font-family: 'Playfair Display', serif;
@@ -422,7 +425,7 @@
     @media (max-width: 600px) {
       header h1 { font-size: 18px; }
       header p { font-size: 10px; }
-      #auth-btn { padding: 6px 12px; font-size: 11px; }
+      .hdr-btn { padding: 6px 10px; font-size: 11px; }
       .bubble { max-width: 90%; font-size: 13px; padding: 12px 14px; }
       #personal-bar { padding: 8px 12px; bottom: 180px; }
       #gender-bar { padding: 8px 12px; bottom: 144px; }
@@ -444,12 +447,16 @@
     <h1>✨ StyleBot</h1>
     <p>YOUR PERSONAL AI FASHION STYLIST</p>
   </div>
-  <button id="auth-btn" onclick="openAuth()">👤 Login / Sign Up</button>
+  <div class="header-btns">
+    <button class="hdr-btn" id="login-btn" onclick="openAuth()">👤 Login / Sign Up</button>
+    <button class="hdr-btn" id="history-btn" onclick="openHistory()" style="display:none;">📋 History</button>
+    <button class="hdr-btn danger" id="logout-btn" onclick="logout()" style="display:none;">🚪 Logout</button>
+  </div>
 </header>
 
 <!-- Auth Modal -->
 <div id="auth-modal">
-  <div class="modal-box" style="position:relative;">
+  <div class="modal-box">
     <button class="modal-close" onclick="closeAuth()">✕</button>
     <div class="modal-title">Welcome to StyleBot ✨</div>
     <div class="modal-subtitle">Save your looks and access your style history</div>
@@ -622,67 +629,23 @@ CONVERSATION RULES:
   let currentUser = null;
   let currentToken = null;
 
-  // ── Auth functions ────────────────────────────────
-  function openAuth() {
-    const savedUser = localStorage.getItem("sb_user");
-    const savedToken = localStorage.getItem("sb_token");
-    if (savedUser && savedToken) {
-      currentUser = JSON.parse(savedUser);
-      currentToken = savedToken;
-    }
-
-    if (currentUser) {
-      showUserMenu();
-      return;
-    }
-    document.getElementById("auth-modal").classList.add("open");
+  // ── Show/hide header buttons ──────────────────────
+  function showLoggedIn(email) {
+    document.getElementById("login-btn").style.display = "none";
+    document.getElementById("history-btn").style.display = "block";
+    document.getElementById("logout-btn").style.display = "block";
+    document.getElementById("history-btn").textContent = "📋 " + email.split("@")[0];
   }
 
-  function showUserMenu() {
-    const existing = document.getElementById("user-menu");
-    if (existing) { existing.remove(); return; }
+  function showLoggedOut() {
+    document.getElementById("login-btn").style.display = "block";
+    document.getElementById("history-btn").style.display = "none";
+    document.getElementById("logout-btn").style.display = "none";
+  }
 
-    const menu = document.createElement("div");
-    menu.id = "user-menu";
-    menu.style.cssText = `
-      position: fixed;
-      top: 60px;
-      right: 16px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      z-index: 999;
-      overflow: hidden;
-      min-width: 180px;
-    `;
-
-    menu.innerHTML = `
-      <div style="padding:12px 16px; font-size:12px; color:#888; border-bottom:1px solid #f0ebe5;">
-        ${currentUser.email}
-      </div>
-      <button onclick="openHistory(); document.getElementById('user-menu').remove();" style="
-        width:100%; padding:12px 16px; border:none; background:none;
-        text-align:left; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;
-        color:#1a1a2e; border-bottom:1px solid #f0ebe5;
-      ">📋 My Style History</button>
-      <button onclick="logout(); document.getElementById('user-menu').remove();" style="
-        width:100%; padding:12px 16px; border:none; background:none;
-        text-align:left; font-size:14px; cursor:pointer; font-family:'Inter',sans-serif;
-        color:#e74c3c;
-      ">🚪 Logout</button>
-    `;
-
-    document.body.appendChild(menu);
-
-    // Close when clicking outside
-    setTimeout(() => {
-      document.addEventListener("click", function closeMenu(e) {
-        if (!menu.contains(e.target) && e.target.id !== "auth-btn") {
-          menu.remove();
-          document.removeEventListener("click", closeMenu);
-        }
-      });
-    }, 100);
+  // ── Auth functions ────────────────────────────────
+  function openAuth() {
+    document.getElementById("auth-modal").classList.add("open");
   }
 
   function closeAuth() {
@@ -702,12 +665,12 @@ CONVERSATION RULES:
   }
 
   async function submitAuth() {
-    const email    = document.getElementById("auth-email").value.trim();
-    const password = document.getElementById("auth-password").value;
-    const isLogin  = document.getElementById("tab-login").classList.contains("active");
-    const errorEl  = document.getElementById("modal-error");
+    const email     = document.getElementById("auth-email").value.trim();
+    const password  = document.getElementById("auth-password").value;
+    const isLogin   = document.getElementById("tab-login").classList.contains("active");
+    const errorEl   = document.getElementById("modal-error");
     const successEl = document.getElementById("modal-success");
-    const btn      = document.getElementById("auth-submit");
+    const btn       = document.getElementById("auth-submit");
 
     if (!email || !password) {
       errorEl.textContent = "Please enter email and password";
@@ -723,10 +686,7 @@ CONVERSATION RULES:
       const res  = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: isLogin ? "login" : "signup",
-          email, password
-        })
+        body: JSON.stringify({ action: isLogin ? "login" : "signup", email, password })
       });
       const data = await res.json();
 
@@ -739,7 +699,7 @@ CONVERSATION RULES:
       }
 
       if (!isLogin) {
-        successEl.textContent = "✅ Account created! Please check your email to verify, then login.";
+        successEl.textContent = "✅ Account created! You can now login.";
         successEl.style.display = "block";
         switchTab("login");
         btn.textContent = "Login";
@@ -752,10 +712,9 @@ CONVERSATION RULES:
       currentToken = data.access_token;
       localStorage.setItem("sb_token", currentToken);
       localStorage.setItem("sb_user", JSON.stringify(currentUser));
-
-      document.getElementById("auth-btn").textContent = "👤 " + email.split("@")[0];
+      showLoggedIn(email);
       closeAuth();
-      addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically. Tap your name in the header to see your style history!`);
+      addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically. Tap your name to see your style history!`);
 
     } catch (err) {
       errorEl.textContent = "Connection error. Please try again.";
@@ -770,7 +729,7 @@ CONVERSATION RULES:
     currentToken = null;
     localStorage.removeItem("sb_token");
     localStorage.removeItem("sb_user");
-    document.getElementById("auth-btn").textContent = "👤 Login / Sign Up";
+    showLoggedOut();
     addMessage("bot", "You've been logged out. Come back anytime! ✨");
   }
 
@@ -780,21 +739,24 @@ CONVERSATION RULES:
     const list = document.getElementById("history-list");
     list.innerHTML = '<div class="history-empty">Loading your looks...</div>';
 
-    if (!currentToken) {
+    if (!currentToken || !currentUser) {
       list.innerHTML = '<div class="history-empty">Please login to see your history</div>';
       return;
     }
 
     try {
+      const configRes = await fetch("/api/config");
+      const configData = await configRes.json();
+
       const res  = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, {
         headers: {
-          "apikey": await getAnonKey(),
+          "apikey": configData.anonKey,
           "Authorization": "Bearer " + currentToken
         }
       });
       const data = await res.json();
 
-      if (!data.length) {
+      if (!Array.isArray(data) || !data.length) {
         list.innerHTML = '<div class="history-empty">No looks saved yet. Start chatting! ✨</div>';
         return;
       }
@@ -804,8 +766,8 @@ CONVERSATION RULES:
         const div = document.createElement("div");
         div.className = "history-item";
         div.innerHTML = `
-          <div class="history-item-q">💬 ${item.user_message?.substring(0, 60)}...</div>
-          <div class="history-item-a">${item.bot_reply?.substring(0, 120)}...</div>
+          <div class="history-item-q">💬 ${(item.user_message || "").substring(0, 60)}...</div>
+          <div class="history-item-a">${(item.bot_reply || "").substring(0, 120)}...</div>
           <div class="history-item-date">${new Date(item.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
         `;
         list.appendChild(div);
@@ -818,12 +780,6 @@ CONVERSATION RULES:
 
   function closeHistory() {
     document.getElementById("history-panel").classList.remove("open");
-  }
-
-  async function getAnonKey() {
-    const res  = await fetch("/api/config");
-    const data = await res.json();
-    return data.anonKey;
   }
 
   // ── Gender, occasions, budget ─────────────────────
@@ -1031,15 +987,14 @@ CONVERSATION RULES:
   document.getElementById("skin-tone-select").addEventListener("change", rebuildDescribe);
   document.getElementById("body-select").addEventListener("change", rebuildDescribe);
 
-  // ── Check existing session ────────────────────────
+  // ── Restore session ───────────────────────────────
   const savedToken = localStorage.getItem("sb_token");
   const savedUser  = localStorage.getItem("sb_user");
   if (savedToken && savedUser) {
     try {
       currentToken = savedToken;
       currentUser  = JSON.parse(savedUser);
-      document.getElementById("auth-btn").textContent = "👤 " + currentUser.email.split("@")[0];
-      console.log("Restored session for:", currentUser.email);
+      showLoggedIn(currentUser.email);
     } catch(e) {
       localStorage.removeItem("sb_token");
       localStorage.removeItem("sb_user");
