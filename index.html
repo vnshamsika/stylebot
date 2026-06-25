@@ -57,8 +57,6 @@
     }
     .hdr-btn:hover { background: rgba(255,255,255,0.25); }
     .hdr-btn.danger { border-color: rgba(231,76,60,0.5); color: #ff8a80; }
-
-    /* Modal */
     #auth-modal {
       display: none;
       position: fixed;
@@ -164,8 +162,6 @@
       margin-bottom: 8px;
       display: none;
     }
-
-    /* History panel */
     #history-panel {
       display: none;
       position: fixed;
@@ -235,7 +231,6 @@
       font-size: 13px;
       margin-top: 40px;
     }
-
     #chat-container {
       width: 100%;
       max-width: 720px;
@@ -454,7 +449,6 @@
   </div>
 </header>
 
-<!-- Auth Modal -->
 <div id="auth-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeAuth()">✕</button>
@@ -472,7 +466,6 @@
   </div>
 </div>
 
-<!-- History Panel -->
 <div id="history-panel">
   <div class="history-header">
     <h3>✨ My Style History</h3>
@@ -539,6 +532,21 @@
 
 <script>
   const SUPABASE_URL = "https://slajlusqrvlayfxaojsv.supabase.co";
+
+  // ── Restore session FIRST before anything else ────
+  let currentUser = null;
+  let currentToken = null;
+  try {
+    const _t = localStorage.getItem("sb_token");
+    const _u = localStorage.getItem("sb_user");
+    if (_t && _u) {
+      currentToken = _t;
+      currentUser = JSON.parse(_u);
+    }
+  } catch(e) {
+    localStorage.removeItem("sb_token");
+    localStorage.removeItem("sb_user");
+  }
 
   const systemPrompts = {
     women: `You are StyleBot, a warm and expert Indian fashion stylist AI for women.
@@ -626,8 +634,16 @@ CONVERSATION RULES:
   const messages = [];
   let currentBudget = 2000;
   let currentGender = "women";
-  let currentUser = null;
-  let currentToken = null;
+
+  // ── Helper to always get fresh user ID ───────────
+  function getUserId() {
+    if (currentUser && currentUser.id) return currentUser.id;
+    try {
+      const u = localStorage.getItem("sb_user");
+      if (u) return JSON.parse(u).id || "anonymous";
+    } catch(e) {}
+    return "anonymous";
+  }
 
   // ── Show/hide header buttons ──────────────────────
   function showLoggedIn(email) {
@@ -707,14 +723,13 @@ CONVERSATION RULES:
         return;
       }
 
-      // Login success
       currentUser  = data.user;
       currentToken = data.access_token;
       localStorage.setItem("sb_token", currentToken);
       localStorage.setItem("sb_user", JSON.stringify(currentUser));
       showLoggedIn(email);
       closeAuth();
-      addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically. Tap your name to see your style history!`);
+      addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically. Tap History to see your style history!`);
 
     } catch (err) {
       errorEl.textContent = "Connection error. Please try again.";
@@ -735,7 +750,6 @@ CONVERSATION RULES:
 
   // ── History panel ─────────────────────────────────
   async function openHistory() {
-    // Re-check session every time
     const savedToken = localStorage.getItem("sb_token");
     const savedUser  = localStorage.getItem("sb_user");
     if (savedToken && savedUser) {
@@ -758,7 +772,7 @@ CONVERSATION RULES:
       const configRes  = await fetch("/api/config");
       const configData = await configRes.json();
 
-      const res  = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, {
         headers: {
           "apikey": configData.anonKey,
           "Authorization": "Bearer " + currentToken
@@ -785,9 +799,9 @@ CONVERSATION RULES:
 
     } catch (err) {
       list.innerHTML = '<div class="history-empty">Could not load history. Try again.</div>';
-      console.log("History error:", err);
     }
   }
+
   function closeHistory() {
     document.getElementById("history-panel").classList.remove("open");
   }
@@ -954,7 +968,7 @@ CONVERSATION RULES:
         body: JSON.stringify({
           messages,
           systemPrompt: systemPrompts[currentGender] + getSkinTypePrompt(),
-          userId: currentUser ? currentUser.id : "anonymous",
+          userId: getUserId(),
           gender: currentGender,
           userMessage: text
         })
@@ -997,18 +1011,9 @@ CONVERSATION RULES:
   document.getElementById("skin-tone-select").addEventListener("change", rebuildDescribe);
   document.getElementById("body-select").addEventListener("change", rebuildDescribe);
 
-  // ── Restore session ───────────────────────────────
-  const savedToken = localStorage.getItem("sb_token");
-  const savedUser  = localStorage.getItem("sb_user");
-  if (savedToken && savedUser) {
-    try {
-      currentToken = savedToken;
-      currentUser  = JSON.parse(savedUser);
-      showLoggedIn(currentUser.email);
-    } catch(e) {
-      localStorage.removeItem("sb_token");
-      localStorage.removeItem("sb_user");
-    }
+  // ── Update header buttons based on session ────────
+  if (currentUser) {
+    showLoggedIn(currentUser.email);
   }
 
   // ── Init ──────────────────────────────────────────
