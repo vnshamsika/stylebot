@@ -735,6 +735,16 @@ CONVERSATION RULES:
 
   // ── History panel ─────────────────────────────────
   async function openHistory() {
+    // Re-check session every time
+    const savedToken = localStorage.getItem("sb_token");
+    const savedUser  = localStorage.getItem("sb_user");
+    if (savedToken && savedUser) {
+      try {
+        currentToken = savedToken;
+        currentUser  = JSON.parse(savedUser);
+      } catch(e) {}
+    }
+
     document.getElementById("history-panel").classList.add("open");
     const list = document.getElementById("history-list");
     list.innerHTML = '<div class="history-empty">Loading your looks...</div>';
@@ -745,7 +755,7 @@ CONVERSATION RULES:
     }
 
     try {
-      const configRes = await fetch("/api/config");
+      const configRes  = await fetch("/api/config");
       const configData = await configRes.json();
 
       const res  = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, {
@@ -775,9 +785,9 @@ CONVERSATION RULES:
 
     } catch (err) {
       list.innerHTML = '<div class="history-empty">Could not load history. Try again.</div>';
+      console.log("History error:", err);
     }
   }
-
   function closeHistory() {
     document.getElementById("history-panel").classList.remove("open");
   }
