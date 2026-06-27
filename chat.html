@@ -182,7 +182,15 @@
       color: white; border-bottom-right-radius: 4px;
       box-shadow: 0 2px 12px rgba(15,52,96,0.3);
     }
-
+    /* Weather Badge */
+    .weather-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(15,52,96,0.08);
+      border: 1px solid rgba(15,52,96,0.15);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 11px; color: #0f3460; font-weight: 500;
+      margin-bottom: 8px;
+    }
     /* Shop Card */
     .shop-card {
       background: #faf8f5; border: 1px solid #e8e0d8;
@@ -223,7 +231,6 @@
       font-family: 'Inter', sans-serif; padding: 0;
     }
     .shop-share-btn:hover { color: #1a1a2e; }
-
     #personal-bar {
       width: 100%; max-width: 720px;
       display: flex; align-items: center; gap: 8px;
@@ -478,6 +485,41 @@
     localStorage.removeItem("sb_user");
   }
 
+  // ── Weather state ─────────────────────────────────
+  let currentWeather = null;
+
+  async function fetchWeather(city) {
+    if (!city || city.trim() === "") return;
+    try {
+      const res = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+      const data = await res.json();
+      if (data.temp) {
+        currentWeather = data;
+        showWeatherBadge(data);
+      }
+    } catch(e) {}
+  }
+
+  function showWeatherBadge(w) {
+    const existing = document.getElementById("weather-badge");
+    if (existing) existing.remove();
+    const badge = document.createElement("div");
+    badge.id = "weather-badge";
+    badge.className = "weather-badge";
+    badge.innerHTML = `${getWeatherEmoji(w.condition)} ${w.city}: ${w.temp}°C, ${w.description}`;
+    const container = document.getElementById("chat-container");
+    container.insertBefore(badge, container.firstChild);
+  }
+
+  function getWeatherEmoji(condition) {
+    const map = {
+      "Clear": "☀️", "Clouds": "☁️", "Rain": "🌧️",
+      "Drizzle": "🌦️", "Thunderstorm": "⛈️",
+      "Snow": "❄️", "Mist": "🌫️", "Haze": "🌫️", "Fog": "🌫️"
+    };
+    return map[condition] || "🌤️";
+  }
+
   const systemPrompts = {
     women: `You are StyleBot, a warm and expert Indian fashion stylist AI for women.
 
@@ -708,33 +750,24 @@ Then give a warm closing line.
     if (savedToken && savedUser) {
       try { currentToken = savedToken; currentUser = JSON.parse(savedUser); } catch(e) {}
     }
-
     document.getElementById("history-panel").classList.add("open");
     const list = document.getElementById("history-list");
     list.innerHTML = '<div class="history-empty">Loading your looks...</div>';
-
     if (!currentToken || !currentUser) {
       list.innerHTML = '<div class="history-empty">Please login to see your history</div>';
       return;
     }
-
     try {
       const configRes = await fetch("/api/config");
       const configData = await configRes.json();
-
       const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, {
-        headers: {
-          "apikey": configData.anonKey,
-          "Authorization": "Bearer " + currentToken
-        }
+        headers: { "apikey": configData.anonKey, "Authorization": "Bearer " + currentToken }
       });
       const data = await res.json();
-
       if (!Array.isArray(data) || !data.length) {
         list.innerHTML = '<div class="history-empty">No looks saved yet. Start chatting! ✨</div>';
         return;
       }
-
       list.innerHTML = "";
       data.forEach(item => {
         const div = document.createElement("div");
@@ -746,7 +779,6 @@ Then give a warm closing line.
         `;
         list.appendChild(div);
       });
-
     } catch (err) {
       list.innerHTML = '<div class="history-empty">Could not load history. Try again.</div>';
     }
@@ -754,7 +786,6 @@ Then give a warm closing line.
 
   function closeHistory() { document.getElementById("history-panel").classList.remove("open"); }
 
-  // ── Shop Card ─────────────────────────────────────
   function getItemEmoji(label) {
     const emojis = {
       "OUTFIT": "👗", "FOOTWEAR": "👠", "JEWELLERY": "💍",
@@ -768,13 +799,10 @@ Then give a warm closing line.
     const start = text.indexOf("STYLEBOT_ITEMS_START");
     const end   = text.indexOf("STYLEBOT_ITEMS_END");
     if (start === -1 || end === -1) return;
-
     const itemsText = text.substring(start + 20, end).trim();
     const lines = itemsText.split("\n").filter(l => l.trim() && l.includes("|"));
-
     const items = [];
     let total = 0;
-
     lines.forEach(line => {
       const pipeIdx = line.lastIndexOf("|");
       if (pipeIdx === -1) return;
@@ -788,12 +816,9 @@ Then give a warm closing line.
       items.push({ label, name, price });
       total += price;
     });
-
     if (!items.length) return;
-
     const firstItem   = items[0]?.name || "fashion";
     const searchQuery = encodeURIComponent(firstItem);
-
     const card = document.createElement("div");
     card.className = "shop-card";
     card.innerHTML = `
@@ -826,7 +851,6 @@ Then give a warm closing line.
     }
   }
 
-  // ── Gender, occasions, budget ─────────────────────
   function setGender(gender, btn) {
     currentGender = gender;
     document.querySelectorAll(".gender-btn").forEach(b => b.classList.remove("active"));
@@ -908,7 +932,6 @@ Then give a warm closing line.
     return `\n\nUser's skin type is ${skinType}. For makeup: ${tips[skinType]}.`;
   }
 
-  // ── Messages ─────────────────────────────────────
   function addMessage(role, text) {
     const container = document.getElementById("chat-container");
     const div = document.createElement("div");
@@ -918,17 +941,13 @@ Then give a warm closing line.
     avatar.textContent = role === "user" ? "👤" : "✨";
     const bubble = document.createElement("div");
     bubble.className = `bubble ${role === "user" ? "user-bubble" : "bot-bubble"}`;
-
     if (role === "bot") {
-      // Clean text — remove structured block
       const cleanText = text.replace(/STYLEBOT_ITEMS_START[\s\S]*?STYLEBOT_ITEMS_END/g, "").trim();
       bubble.textContent = cleanText;
-      // Show shop card if items exist
       parseAndShowShopCard(text, bubble);
     } else {
       bubble.textContent = text;
     }
-
     if (role === "bot" && text.length > 100) {
       const shareBtn = document.createElement("button");
       shareBtn.className = "share-btn";
@@ -945,7 +964,6 @@ Then give a warm closing line.
       };
       bubble.appendChild(shareBtn);
     }
-
     div.appendChild(avatar);
     div.appendChild(bubble);
     container.appendChild(div);
@@ -974,19 +992,16 @@ Then give a warm closing line.
     if (el) el.remove();
   }
 
-  // ── Send message ─────────────────────────────────
   async function sendMessage() {
     const input = document.getElementById("user-input");
     const btn   = document.getElementById("send-btn");
     const text  = input.value.trim();
     if (!text) return;
-
     addMessage("user", text);
     messages.push({ role: "user", content: text });
     input.value = "";
     btn.disabled = true;
     addTyping();
-
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -996,10 +1011,10 @@ Then give a warm closing line.
           systemPrompt: systemPrompts[currentGender] + getSkinTypePrompt(),
           userId: getUserId(),
           gender: currentGender,
-          userMessage: text
+          userMessage: text,
+          city: document.getElementById("city-input").value.trim()
         })
       });
-
       const data = await response.json();
       if (!data.choices) {
         addMessage("bot", "API Error: " + JSON.stringify(data));
@@ -1010,12 +1025,10 @@ Then give a warm closing line.
       messages.push({ role: "assistant", content: reply });
       removeTyping();
       addMessage("bot", reply);
-
     } catch (err) {
       removeTyping();
       addMessage("bot", "Sorry, something went wrong. Please try again!");
     }
-
     btn.disabled = false;
     input.focus();
   }
@@ -1033,16 +1046,21 @@ Then give a warm closing line.
     }
   });
 
-  document.getElementById("city-input").addEventListener("input", rebuildDescribe);
+  document.getElementById("city-input").addEventListener("input", function() {
+    rebuildDescribe();
+    clearTimeout(this._weatherTimer);
+    this._weatherTimer = setTimeout(() => {
+      if (this.value.trim().length > 2) fetchWeather(this.value.trim());
+    }, 800);
+  });
+
   document.getElementById("skin-tone-select").addEventListener("change", rebuildDescribe);
   document.getElementById("body-select").addEventListener("change", rebuildDescribe);
 
-  // ── Update header based on session ────────────────
   if (currentUser) showLoggedIn(currentUser.email);
 
-  // ── Init ──────────────────────────────────────────
   renderOccasions();
-  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nLogin to save your looks! Or just start chatting — I'll give you a complete look with shopping links! ✨");
+  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city to see live weather and get weather-appropriate looks! ☀️🌧️");
 </script>
 
 </body>
