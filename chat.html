@@ -182,16 +182,6 @@
       color: white; border-bottom-right-radius: 4px;
       box-shadow: 0 2px 12px rgba(15,52,96,0.3);
     }
-    /* Weather Badge */
-    .weather-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(15,52,96,0.08);
-      border: 1px solid rgba(15,52,96,0.15);
-      border-radius: 20px; padding: 4px 12px;
-      font-size: 11px; color: #0f3460; font-weight: 500;
-      margin-bottom: 8px;
-    }
-    /* Shop Card */
     .shop-card {
       background: #faf8f5; border: 1px solid #e8e0d8;
       border-radius: 14px; padding: 14px; margin-top: 12px;
@@ -470,7 +460,6 @@
 <script>
   const SUPABASE_URL = "https://slajlusqrvlayfxaojsv.supabase.co";
 
-  // ── Restore session FIRST ─────────────────────────
   let currentUser = null;
   let currentToken = null;
   try {
@@ -485,7 +474,6 @@
     localStorage.removeItem("sb_user");
   }
 
-  // ── Weather state ─────────────────────────────────
   let currentWeather = null;
 
   async function fetchWeather(city) {
@@ -495,20 +483,29 @@
       const data = await res.json();
       if (data.temp) {
         currentWeather = data;
-        showWeatherBadge(data);
+        showWeatherMessage(data);
       }
     } catch(e) {}
   }
 
-  function showWeatherBadge(w) {
-    const existing = document.getElementById("weather-badge");
+  // ── Weather shows as chat message ─────────────────
+  function showWeatherMessage(w) {
+    const existing = document.getElementById("weather-msg");
     if (existing) existing.remove();
-    const badge = document.createElement("div");
-    badge.id = "weather-badge";
-    badge.className = "weather-badge";
-    badge.innerHTML = `${getWeatherEmoji(w.condition)} ${w.city}: ${w.temp}°C, ${w.description}`;
     const container = document.getElementById("chat-container");
-    container.insertBefore(badge, container.firstChild);
+    const div = document.createElement("div");
+    div.className = "message bot";
+    div.id = "weather-msg";
+    const avatar = document.createElement("div");
+    avatar.className = "avatar bot-avatar";
+    avatar.textContent = "✨";
+    const bubble = document.createElement("div");
+    bubble.className = "bubble bot-bubble";
+    bubble.textContent = `${getWeatherEmoji(w.condition)} It's currently ${w.temp}°C in ${w.city} — ${w.description} (feels like ${w.feels}°C, humidity ${w.humidity}%). I'll suggest fabrics and styles perfect for this weather!`;
+    div.appendChild(avatar);
+    div.appendChild(bubble);
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
   }
 
   function getWeatherEmoji(condition) {
@@ -683,17 +680,14 @@ Then give a warm closing line.
     const errorEl = document.getElementById("modal-error");
     const successEl = document.getElementById("modal-success");
     const btn = document.getElementById("auth-submit");
-
     if (!email || !password) {
       errorEl.textContent = "Please enter email and password";
       errorEl.style.display = "block";
       return;
     }
-
     btn.textContent = isLogin ? "Logging in..." : "Creating account...";
     btn.disabled = true;
     errorEl.style.display = "none";
-
     try {
       const res = await fetch("/api/auth", {
         method: "POST",
@@ -701,7 +695,6 @@ Then give a warm closing line.
         body: JSON.stringify({ action: isLogin ? "login" : "signup", email, password })
       });
       const data = await res.json();
-
       if (data.error || data.msg) {
         errorEl.textContent = data.error?.message || data.msg || "Something went wrong";
         errorEl.style.display = "block";
@@ -709,7 +702,6 @@ Then give a warm closing line.
         btn.disabled = false;
         return;
       }
-
       if (!isLogin) {
         successEl.textContent = "✅ Account created! You can now login.";
         successEl.style.display = "block";
@@ -718,7 +710,6 @@ Then give a warm closing line.
         btn.disabled = false;
         return;
       }
-
       currentUser = data.user;
       currentToken = data.access_token;
       localStorage.setItem("sb_token", currentToken);
@@ -726,7 +717,6 @@ Then give a warm closing line.
       showLoggedIn(email);
       closeAuth();
       addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically!`);
-
     } catch (err) {
       errorEl.textContent = "Connection error. Please try again.";
       errorEl.style.display = "block";
@@ -1033,7 +1023,6 @@ Then give a warm closing line.
     input.focus();
   }
 
-  // ── Event listeners ───────────────────────────────
   document.getElementById("user-input").addEventListener("input", function() {
     const match = this.value.match(/₹\s?([\d,]+)/);
     if (match) {
@@ -1060,7 +1049,7 @@ Then give a warm closing line.
   if (currentUser) showLoggedIn(currentUser.email);
 
   renderOccasions();
-  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city to see live weather and get weather-appropriate looks! ☀️🌧️");
+  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city to get live weather and weather-appropriate looks! ☀️🌧️");
 </script>
 
 </body>
