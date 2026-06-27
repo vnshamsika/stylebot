@@ -83,93 +83,50 @@
       color: #1a1a2e;
       margin-bottom: 6px;
     }
-    .modal-subtitle {
-      font-size: 13px;
-      color: #888;
-      margin-bottom: 24px;
-    }
+    .modal-subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
     .modal-tabs {
-      display: flex;
-      gap: 4px;
+      display: flex; gap: 4px;
       background: #f0ebe5;
       border-radius: 12px;
       padding: 4px;
       margin-bottom: 24px;
     }
     .modal-tab {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      border-radius: 8px;
-      font-size: 13px;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      color: #888;
-      background: transparent;
-      transition: all 0.2s;
+      flex: 1; padding: 8px; border: none;
+      border-radius: 8px; font-size: 13px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 500;
+      color: #888; background: transparent; transition: all 0.2s;
     }
     .modal-tab.active {
-      background: white;
-      color: #1a1a2e;
+      background: white; color: #1a1a2e;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
     .modal-input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1.5px solid #e8e0d8;
-      border-radius: 12px;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
-      outline: none;
-      margin-bottom: 12px;
-      transition: border-color 0.2s;
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid #e8e0d8; border-radius: 12px;
+      font-size: 14px; font-family: 'Inter', sans-serif;
+      outline: none; margin-bottom: 12px; transition: border-color 0.2s;
     }
     .modal-input:focus { border-color: #1a1a2e; }
     .modal-submit {
-      width: 100%;
-      padding: 12px;
+      width: 100%; padding: 12px;
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      margin-top: 4px;
-      transition: all 0.2s;
+      color: white; border: none; border-radius: 12px;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif; margin-top: 4px; transition: all 0.2s;
     }
     .modal-submit:hover { opacity: 0.9; transform: translateY(-1px); }
     .modal-close {
-      position: absolute;
-      top: 16px; right: 16px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: #888;
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; font-size: 20px;
+      cursor: pointer; color: #888;
     }
-    .modal-error {
-      color: #e74c3c;
-      font-size: 12px;
-      margin-bottom: 8px;
-      display: none;
-    }
-    .modal-success {
-      color: #27ae60;
-      font-size: 12px;
-      margin-bottom: 8px;
-      display: none;
-    }
+    .modal-error { color: #e74c3c; font-size: 12px; margin-bottom: 8px; display: none; }
+    .modal-success { color: #27ae60; font-size: 12px; margin-bottom: 8px; display: none; }
     #history-panel {
-      display: none;
-      position: fixed;
-      top: 0; right: 0;
-      width: 340px;
-      height: 100%;
-      background: white;
-      z-index: 999;
+      display: none; position: fixed;
+      top: 0; right: 0; width: 340px; height: 100%;
+      background: white; z-index: 999;
       box-shadow: -4px 0 20px rgba(0,0,0,0.1);
       flex-direction: column;
     }
@@ -177,74 +134,32 @@
     .history-header {
       padding: 20px;
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color: white; display: flex;
+      justify-content: space-between; align-items: center;
     }
-    .history-header h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px;
-    }
-    .history-close {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
+    .history-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; }
+    .history-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
     .history-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      flex: 1; overflow-y: auto; padding: 16px;
+      display: flex; flex-direction: column; gap: 12px;
     }
     .history-item {
-      background: #faf8f5;
-      border: 1px solid #f0ebe5;
-      border-radius: 12px;
-      padding: 12px;
+      background: #faf8f5; border: 1px solid #f0ebe5;
+      border-radius: 12px; padding: 12px;
     }
-    .history-item-q {
-      font-size: 12px;
-      font-weight: 600;
-      color: #1a1a2e;
-      margin-bottom: 6px;
-    }
-    .history-item-a {
-      font-size: 11px;
-      color: #888;
-      line-height: 1.5;
-      max-height: 60px;
-      overflow: hidden;
-    }
-    .history-item-date {
-      font-size: 10px;
-      color: #bbb;
-      margin-top: 6px;
-    }
-    .history-empty {
-      text-align: center;
-      color: #888;
-      font-size: 13px;
-      margin-top: 40px;
-    }
+    .history-item-q { font-size: 12px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px; }
+    .history-item-a { font-size: 11px; color: #888; line-height: 1.5; max-height: 60px; overflow: hidden; }
+    .history-item-date { font-size: 10px; color: #bbb; margin-top: 6px; }
+    .history-empty { text-align: center; color: #888; font-size: 13px; margin-top: 40px; }
     #chat-container {
-      width: 100%;
-      max-width: 720px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 24px 16px 16px;
-      gap: 16px;
+      width: 100%; max-width: 720px; flex: 1;
+      display: flex; flex-direction: column;
+      padding: 24px 16px 16px; gap: 16px;
     }
     .message { display: flex; gap: 10px; align-items: flex-start; }
     .message.user { flex-direction: row-reverse; }
     .avatar {
-      width: 38px; height: 38px;
-      border-radius: 50%;
+      width: 38px; height: 38px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 16px; flex-shrink: 0;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
@@ -252,12 +167,9 @@
     .bot-avatar { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; }
     .user-avatar { background: linear-gradient(135deg, #e8d5c4, #d4b896); color: #1a1a2e; }
     .bubble {
-      max-width: 80%;
-      padding: 14px 18px;
-      border-radius: 18px;
-      font-size: 14px;
-      line-height: 1.7;
-      white-space: pre-wrap;
+      max-width: 80%; padding: 14px 18px;
+      border-radius: 18px; font-size: 14px;
+      line-height: 1.7; white-space: pre-wrap;
     }
     .bot-bubble {
       background: white; color: #1a1a2e;
@@ -267,47 +179,74 @@
     }
     .user-bubble {
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
-      color: white;
-      border-bottom-right-radius: 4px;
+      color: white; border-bottom-right-radius: 4px;
       box-shadow: 0 2px 12px rgba(15,52,96,0.3);
     }
+
+    /* Shop Card */
+    .shop-card {
+      background: #faf8f5; border: 1px solid #e8e0d8;
+      border-radius: 14px; padding: 14px; margin-top: 12px;
+    }
+    .shop-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; color: #1a1a2e;
+      margin-bottom: 10px; font-weight: 600;
+    }
+    .shop-item {
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 5px 0;
+      border-bottom: 1px solid #f0ebe5;
+      font-size: 12px; color: #1a1a2e;
+    }
+    .shop-item:last-of-type { border-bottom: none; }
+    .shop-item-price { font-weight: 600; color: #0f3460; margin-left: 8px; white-space: nowrap; }
+    .shop-total {
+      font-size: 11px; color: #888; margin-top: 8px;
+      padding-top: 6px; border-top: 1px solid #e8e0d8;
+    }
+    .shop-buttons { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .shop-store-btn {
+      padding: 6px 12px; border-radius: 20px; border: none;
+      font-size: 11px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: all 0.2s;
+      text-decoration: none; display: inline-block; color: white;
+    }
+    .btn-myntra { background: #ff3f6c; }
+    .btn-amazon { background: #ff9900; }
+    .btn-ajio { background: #1a1a2e; }
+    .btn-nykaa { background: #fc2779; }
+    .shop-store-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .shop-share-btn {
+      margin-top: 8px; background: none; border: none;
+      font-size: 12px; color: #888; cursor: pointer;
+      font-family: 'Inter', sans-serif; padding: 0;
+    }
+    .shop-share-btn:hover { color: #1a1a2e; }
+
     #personal-bar {
       width: 100%; max-width: 720px;
       display: flex; align-items: center; gap: 8px;
       padding: 10px 16px; background: white;
       border-top: 1px solid #f0ebe5;
       position: sticky; bottom: 188px;
-      overflow-x: auto;
-      scrollbar-width: none;
+      overflow-x: auto; scrollbar-width: none;
     }
     #personal-bar::-webkit-scrollbar { display: none; }
     .personal-select {
-      background: #faf8f5;
-      border: 1.5px solid #e8e0d8;
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      color: #1a1a2e;
-      outline: none;
-      white-space: nowrap;
-      transition: all 0.2s;
+      background: #faf8f5; border: 1.5px solid #e8e0d8;
+      border-radius: 20px; padding: 6px 12px; font-size: 12px;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      font-weight: 500; color: #1a1a2e; outline: none;
+      white-space: nowrap; transition: all 0.2s;
     }
     .personal-select:focus { border-color: #1a1a2e; }
     #city-input {
-      width: 120px;
-      background: #faf8f5;
-      border: 1.5px solid #e8e0d8;
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      color: #1a1a2e;
-      outline: none;
-      transition: all 0.2s;
+      width: 120px; background: #faf8f5;
+      border: 1.5px solid #e8e0d8; border-radius: 20px;
+      padding: 6px 12px; font-size: 12px;
+      font-family: 'Inter', sans-serif; font-weight: 500;
+      color: #1a1a2e; outline: none; transition: all 0.2s;
     }
     #city-input:focus { border-color: #1a1a2e; }
     #city-input::placeholder { color: #aaa; }
@@ -321,10 +260,9 @@
     .gender-label { font-size: 12px; color: #888; white-space: nowrap; font-weight: 500; }
     .gender-btn {
       background: #faf8f5; border: 1.5px solid #e8e0d8;
-      border-radius: 20px; padding: 6px 14px;
-      font-size: 12px; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-weight: 500;
-      color: #1a1a2e; transition: all 0.2s;
+      border-radius: 20px; padding: 6px 14px; font-size: 12px;
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      font-weight: 500; color: #1a1a2e; transition: all 0.2s;
     }
     .gender-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
     .gender-btn:hover { background: #1a1a2e; color: white; border-color: #1a1a2e; }
@@ -339,16 +277,10 @@
     .budget-label { font-size: 12px; color: #888; white-space: nowrap; font-weight: 500; }
     #budget-slider { flex: 1; accent-color: #0f3460; }
     #budget-input {
-      width: 70px;
-      border: 1.5px solid #e8e0d8;
-      border-radius: 8px;
-      padding: 4px 8px;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      color: #0f3460;
-      outline: none;
-      text-align: center;
+      width: 70px; border: 1.5px solid #e8e0d8;
+      border-radius: 8px; padding: 4px 8px;
+      font-family: 'Inter', sans-serif; font-size: 13px;
+      font-weight: 600; color: #0f3460; outline: none; text-align: center;
     }
     #budget-input:focus { border-color: #0f3460; }
     #occasion-bar {
@@ -356,14 +288,13 @@
       display: flex; gap: 8px; padding: 10px 16px;
       overflow-x: auto; background: white;
       border-top: 1px solid #f0ebe5;
-      position: sticky; bottom: 68px;
-      scrollbar-width: none;
+      position: sticky; bottom: 68px; scrollbar-width: none;
     }
     #occasion-bar::-webkit-scrollbar { display: none; }
     .occ-btn {
       background: #faf8f5; border: 1.5px solid #e8e0d8;
-      border-radius: 20px; padding: 7px 14px;
-      font-size: 12px; cursor: pointer; white-space: nowrap;
+      border-radius: 20px; padding: 7px 14px; font-size: 12px;
+      cursor: pointer; white-space: nowrap;
       font-family: 'Inter', sans-serif; color: #1a1a2e;
       font-weight: 500; transition: all 0.2s;
     }
@@ -384,8 +315,7 @@
       border: 1.5px solid #e8e0d8; border-radius: 24px;
       font-size: 14px; outline: none;
       font-family: 'Inter', sans-serif;
-      background: #faf8f5; color: #1a1a2e;
-      transition: border-color 0.2s;
+      background: #faf8f5; color: #1a1a2e; transition: border-color 0.2s;
     }
     #user-input:focus { border-color: #0f3460; background: white; }
     #send-btn {
@@ -533,7 +463,7 @@
 <script>
   const SUPABASE_URL = "https://slajlusqrvlayfxaojsv.supabase.co";
 
-  // ── Restore session FIRST before anything else ────
+  // ── Restore session FIRST ─────────────────────────
   let currentUser = null;
   let currentToken = null;
   try {
@@ -560,12 +490,23 @@ STRICT RULES FOR WOMEN'S FASHION:
 - Always suggest makeup and hairstyle for women
 
 CONVERSATION RULES:
-1. If the user describes an occasion or asks for a complete look — give full head-to-toe recommendation including outfit, footwear, jewellery, bag, makeup and hairstyle.
-2. If the user asks ONLY about one thing like "suggest earrings" or "what hairstyle?" — answer ONLY that specific question.
-3. If the user asks follow ups like "something more casual?" or "different color?" — respond naturally to that specific request.
-4. Always consider occasion, location, season, weather, budget, skin tone if mentioned, and Indian women's fashion context.
-5. Be warm, conversational, specific and enthusiastic like a best friend who knows fashion.
-6. Never give the same fixed format every time — respond naturally based on what the user actually asked.`,
+1. If the user describes an occasion or asks for a complete look — give a warm intro paragraph, then give recommendations in EXACTLY this format:
+
+STYLEBOT_ITEMS_START
+OUTFIT: [specific item name with color and fabric] | ₹[estimated price]
+FOOTWEAR: [specific item name with color] | ₹[estimated price]
+JEWELLERY: [specific item name] | ₹[estimated price]
+BAG: [specific item name with color] | ₹[estimated price]
+MAKEUP: [specific description] | ₹[estimated price]
+HAIRSTYLE: [specific description] | ₹0
+STYLEBOT_ITEMS_END
+
+Then give a warm closing line with styling tips.
+
+2. If the user asks ONLY about one thing — answer naturally without the structured format.
+3. If the user asks follow ups — respond naturally.
+4. Always consider occasion, location, season, weather, budget, skin tone and Indian women's fashion context.
+5. Be warm and enthusiastic like a best friend who knows fashion.`,
 
     men: `You are StyleBot, a sharp and expert Indian fashion stylist AI for men.
 
@@ -579,12 +520,21 @@ STRICT RULES FOR MEN'S FASHION:
 - Men's grooming ONLY: hairstyle and beard style
 
 CONVERSATION RULES:
-1. If the user describes an occasion or asks for a complete look — give full recommendation including outfit, footwear, accessories (watch/belt) and grooming (hairstyle + beard).
-2. If the user asks ONLY about one thing like "what shoes?" or "what shirt color?" — answer ONLY that specific question.
-3. If the user asks follow ups — respond naturally to that specific request.
-4. Always consider occasion, location, season, weather, budget, and Indian men's fashion context.
-5. Be confident, practical and conversational like a stylish male friend.
-6. Never suggest anything that is clearly women's fashion under any circumstance.`,
+1. If the user describes an occasion or asks for a complete look — give a warm intro, then give recommendations in EXACTLY this format:
+
+STYLEBOT_ITEMS_START
+OUTFIT: [specific item name with color and fabric] | ₹[estimated price]
+FOOTWEAR: [specific item name with color] | ₹[estimated price]
+ACCESSORY: [specific item name] | ₹[estimated price]
+GROOMING: [specific hairstyle and beard description] | ₹0
+STYLEBOT_ITEMS_END
+
+Then give a warm closing line.
+
+2. If the user asks ONLY about one thing — answer naturally without the structured format.
+3. Always consider occasion, location, season, weather, budget, and Indian men's fashion context.
+4. Be confident and practical like a stylish male friend.
+5. Never suggest anything that is clearly women's fashion.`,
 
     kids: `You are StyleBot, a fun and expert Indian fashion stylist AI for kids clothing.
 
@@ -597,8 +547,17 @@ STRICT RULES FOR KIDS FASHION:
 - Suggest breathable fabrics like cotton for Indian weather
 
 CONVERSATION RULES:
-1. Full recommendation for complete outfit requests.
-2. Answer ONLY what is asked for specific questions.
+1. If they describe an occasion or ask for a complete outfit — give a warm intro, then give recommendations in EXACTLY this format:
+
+STYLEBOT_ITEMS_START
+OUTFIT: [specific item name with color] | ₹[estimated price]
+FOOTWEAR: [specific item name] | ₹[estimated price]
+ACCESSORY: [specific item name] | ₹[estimated price]
+STYLEBOT_ITEMS_END
+
+Then give a warm closing line.
+
+2. If they ask ONLY about one thing — answer naturally.
 3. Always consider child's age group — toddler (1-3), kids (4-8), preteen (9-12).
 4. Be fun, practical and parent-friendly.`
   };
@@ -635,7 +594,6 @@ CONVERSATION RULES:
   let currentBudget = 2000;
   let currentGender = "women";
 
-  // ── Helper to always get fresh user ID ───────────
   function getUserId() {
     if (currentUser && currentUser.id) return currentUser.id;
     try {
@@ -645,7 +603,6 @@ CONVERSATION RULES:
     return "anonymous";
   }
 
-  // ── Show/hide header buttons ──────────────────────
   function showLoggedIn(email) {
     document.getElementById("login-btn").style.display = "none";
     document.getElementById("history-btn").style.display = "block";
@@ -659,10 +616,7 @@ CONVERSATION RULES:
     document.getElementById("logout-btn").style.display = "none";
   }
 
-  // ── Auth functions ────────────────────────────────
-  function openAuth() {
-    document.getElementById("auth-modal").classList.add("open");
-  }
+  function openAuth() { document.getElementById("auth-modal").classList.add("open"); }
 
   function closeAuth() {
     document.getElementById("auth-modal").classList.remove("open");
@@ -681,12 +635,12 @@ CONVERSATION RULES:
   }
 
   async function submitAuth() {
-    const email     = document.getElementById("auth-email").value.trim();
-    const password  = document.getElementById("auth-password").value;
-    const isLogin   = document.getElementById("tab-login").classList.contains("active");
-    const errorEl   = document.getElementById("modal-error");
+    const email = document.getElementById("auth-email").value.trim();
+    const password = document.getElementById("auth-password").value;
+    const isLogin = document.getElementById("tab-login").classList.contains("active");
+    const errorEl = document.getElementById("modal-error");
     const successEl = document.getElementById("modal-success");
-    const btn       = document.getElementById("auth-submit");
+    const btn = document.getElementById("auth-submit");
 
     if (!email || !password) {
       errorEl.textContent = "Please enter email and password";
@@ -699,7 +653,7 @@ CONVERSATION RULES:
     errorEl.style.display = "none";
 
     try {
-      const res  = await fetch("/api/auth", {
+      const res = await fetch("/api/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: isLogin ? "login" : "signup", email, password })
@@ -723,13 +677,13 @@ CONVERSATION RULES:
         return;
       }
 
-      currentUser  = data.user;
+      currentUser = data.user;
       currentToken = data.access_token;
       localStorage.setItem("sb_token", currentToken);
       localStorage.setItem("sb_user", JSON.stringify(currentUser));
       showLoggedIn(email);
       closeAuth();
-      addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically. Tap History to see your style history!`);
+      addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically!`);
 
     } catch (err) {
       errorEl.textContent = "Connection error. Please try again.";
@@ -740,7 +694,7 @@ CONVERSATION RULES:
   }
 
   function logout() {
-    currentUser  = null;
+    currentUser = null;
     currentToken = null;
     localStorage.removeItem("sb_token");
     localStorage.removeItem("sb_user");
@@ -748,15 +702,11 @@ CONVERSATION RULES:
     addMessage("bot", "You've been logged out. Come back anytime! ✨");
   }
 
-  // ── History panel ─────────────────────────────────
   async function openHistory() {
     const savedToken = localStorage.getItem("sb_token");
-    const savedUser  = localStorage.getItem("sb_user");
+    const savedUser = localStorage.getItem("sb_user");
     if (savedToken && savedUser) {
-      try {
-        currentToken = savedToken;
-        currentUser  = JSON.parse(savedUser);
-      } catch(e) {}
+      try { currentToken = savedToken; currentUser = JSON.parse(savedUser); } catch(e) {}
     }
 
     document.getElementById("history-panel").classList.add("open");
@@ -769,7 +719,7 @@ CONVERSATION RULES:
     }
 
     try {
-      const configRes  = await fetch("/api/config");
+      const configRes = await fetch("/api/config");
       const configData = await configRes.json();
 
       const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, {
@@ -802,8 +752,78 @@ CONVERSATION RULES:
     }
   }
 
-  function closeHistory() {
-    document.getElementById("history-panel").classList.remove("open");
+  function closeHistory() { document.getElementById("history-panel").classList.remove("open"); }
+
+  // ── Shop Card ─────────────────────────────────────
+  function getItemEmoji(label) {
+    const emojis = {
+      "OUTFIT": "👗", "FOOTWEAR": "👠", "JEWELLERY": "💍",
+      "BAG": "👜", "MAKEUP": "💄", "HAIRSTYLE": "💇",
+      "ACCESSORY": "⌚", "GROOMING": "💈"
+    };
+    return emojis[label.toUpperCase()] || "✨";
+  }
+
+  function parseAndShowShopCard(text, bubble) {
+    const start = text.indexOf("STYLEBOT_ITEMS_START");
+    const end   = text.indexOf("STYLEBOT_ITEMS_END");
+    if (start === -1 || end === -1) return;
+
+    const itemsText = text.substring(start + 20, end).trim();
+    const lines = itemsText.split("\n").filter(l => l.trim() && l.includes("|"));
+
+    const items = [];
+    let total = 0;
+
+    lines.forEach(line => {
+      const pipeIdx = line.lastIndexOf("|");
+      if (pipeIdx === -1) return;
+      const labelAndName = line.substring(0, pipeIdx).trim();
+      const priceStr     = line.substring(pipeIdx + 1).trim();
+      const colonIdx     = labelAndName.indexOf(":");
+      if (colonIdx === -1) return;
+      const label = labelAndName.substring(0, colonIdx).trim();
+      const name  = labelAndName.substring(colonIdx + 1).trim();
+      const price = parseInt(priceStr.replace(/[₹,\s]/g, "")) || 0;
+      items.push({ label, name, price });
+      total += price;
+    });
+
+    if (!items.length) return;
+
+    const firstItem   = items[0]?.name || "fashion";
+    const searchQuery = encodeURIComponent(firstItem);
+
+    const card = document.createElement("div");
+    card.className = "shop-card";
+    card.innerHTML = `
+      <div class="shop-card-title">✨ Your Complete Look</div>
+      ${items.map(item => `
+        <div class="shop-item">
+          <span>${getItemEmoji(item.label)} ${item.name}</span>
+          <span class="shop-item-price">${item.price > 0 ? "₹" + item.price.toLocaleString("en-IN") : "—"}</span>
+        </div>
+      `).join("")}
+      <div class="shop-total">Estimated Total: ₹${total.toLocaleString("en-IN")}</div>
+      <div class="shop-buttons">
+        <a class="shop-store-btn btn-myntra" href="https://www.myntra.com/${searchQuery}" target="_blank">🛍️ Myntra</a>
+        <a class="shop-store-btn btn-amazon" href="https://www.amazon.in/s?k=${searchQuery}" target="_blank">📦 Amazon</a>
+        <a class="shop-store-btn btn-ajio" href="https://www.ajio.com/search/?text=${searchQuery}" target="_blank">🏪 Ajio</a>
+        <a class="shop-store-btn btn-nykaa" href="https://www.nykaa.com/search/result/?q=${searchQuery}" target="_blank">💄 Nykaa</a>
+      </div>
+      <button class="shop-share-btn" onclick="shareShopLook('${searchQuery}')">📤 Share this look</button>
+    `;
+    bubble.appendChild(card);
+  }
+
+  function shareShopLook(query) {
+    const msg = `✨ Check out my StyleBot look!\n\nShop it:\n• Myntra: https://www.myntra.com/${query}\n• Amazon: https://www.amazon.in/s?k=${query}\n\nGet your look: https://stylebot-three.vercel.app`;
+    if (navigator.share) {
+      navigator.share({ title: "My StyleBot Look ✨", text: msg }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(msg);
+      alert("Copied! Paste anywhere to share.");
+    }
   }
 
   // ── Gender, occasions, budget ─────────────────────
@@ -844,15 +864,12 @@ CONVERSATION RULES:
   function syncBudgetToDescribe() {
     const input = document.getElementById("user-input");
     if (input.value.includes("budget ₹")) {
-      input.value = input.value.replace(
-        /budget ₹[\d,]+/,
-        "budget ₹" + currentBudget.toLocaleString("en-IN")
-      );
+      input.value = input.value.replace(/budget ₹[\d,]+/, "budget ₹" + currentBudget.toLocaleString("en-IN"));
     }
   }
 
   function rebuildDescribe() {
-    const input = document.getElementById("user-input");
+    const input    = document.getElementById("user-input");
     if (!input.value) return;
     const city     = document.getElementById("city-input").value.trim();
     const skinTone = document.getElementById("skin-tone-select").value;
@@ -901,14 +918,23 @@ CONVERSATION RULES:
     avatar.textContent = role === "user" ? "👤" : "✨";
     const bubble = document.createElement("div");
     bubble.className = `bubble ${role === "user" ? "user-bubble" : "bot-bubble"}`;
-    bubble.textContent = text;
+
+    if (role === "bot") {
+      // Clean text — remove structured block
+      const cleanText = text.replace(/STYLEBOT_ITEMS_START[\s\S]*?STYLEBOT_ITEMS_END/g, "").trim();
+      bubble.textContent = cleanText;
+      // Show shop card if items exist
+      parseAndShowShopCard(text, bubble);
+    } else {
+      bubble.textContent = text;
+    }
 
     if (role === "bot" && text.length > 100) {
       const shareBtn = document.createElement("button");
       shareBtn.className = "share-btn";
       shareBtn.textContent = "📤 Share this look";
       shareBtn.onclick = async () => {
-        const msg = "✨ StyleBot gave me this look!\n\n" + text + "\n\nTry it: https://stylebot-three.vercel.app";
+        const msg = "✨ StyleBot gave me this look!\n\n" + text.replace(/STYLEBOT_ITEMS_START[\s\S]*?STYLEBOT_ITEMS_END/g, "").trim() + "\n\nTry it: https://stylebot-three.vercel.app";
         if (navigator.share) {
           try { await navigator.share({ title: "My StyleBot Look ✨", text: msg }); } catch(e) {}
         } else {
@@ -1011,14 +1037,12 @@ CONVERSATION RULES:
   document.getElementById("skin-tone-select").addEventListener("change", rebuildDescribe);
   document.getElementById("body-select").addEventListener("change", rebuildDescribe);
 
-  // ── Update header buttons based on session ────────
-  if (currentUser) {
-    showLoggedIn(currentUser.email);
-  }
+  // ── Update header based on session ────────────────
+  if (currentUser) showLoggedIn(currentUser.email);
 
   // ── Init ──────────────────────────────────────────
   renderOccasions();
-  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nLogin to save your looks and see your style history! Or just start chatting — I'll give you a complete personalized look from head to toe! ✨");
+  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nLogin to save your looks! Or just start chatting — I'll give you a complete look with shopping links! ✨");
 </script>
 
 </body>
