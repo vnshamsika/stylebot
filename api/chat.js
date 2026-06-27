@@ -2,11 +2,12 @@ export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
   if (req.method === "OPTIONS") return res.status(200).end();
 
   try {
     const { messages, systemPrompt, userId, gender, userMessage } = req.body;
+
+    console.log("Saving chat for userId:", userId); // Debug log
 
     const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -25,15 +26,15 @@ export default async function handler(req, res) {
     });
 
     const groqData = await groqResponse.json();
-
     if (!groqData.choices) {
       return res.status(500).json({ error: "Groq error", details: groqData });
     }
 
     const reply = groqData.choices[0].message.content;
 
+    // Save to Supabase
     try {
-      await fetch(`${process.env.SUPABASE_URL}/rest/v1/chat_history`, {
+      const saveRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/chat_history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,11 +49,14 @@ export default async function handler(req, res) {
           bot_reply: reply
         })
       });
+      console.log("Supabase save status:", saveRes.status);
     } catch (dbErr) {
       console.log("Supabase error:", dbErr);
     }
 
-    return res.status(200).json({ choices: [{ message: { content: reply } }] });
+    return res.status(200).json({
+      choices: [{ message: { content: reply } }]
+    });
 
   } catch (err) {
     console.log("Handler error:", err);
