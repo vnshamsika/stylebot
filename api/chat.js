@@ -5,10 +5,39 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
 
   try {
-    const { messages, systemPrompt, userId, gender, userMessage } = req.body;
+    const { messages, systemPrompt, userId, gender, userMessage, city } = req.body;
 
-    console.log("Saving chat for userId:", userId); // Debug log
+    // Fetch weather if city is provided
+    let weatherContext = "";
+    if (city && city.trim() && process.env.WEATHER_API_KEY) {
+      try {
+        const weatherRes = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)},IN&appid=${process.env.WEATHER_API_KEY}&units=metric`
+        );
+        const weatherData = await weatherRes.json();
+        if (weatherData.main) {
+          const temp    = Math.round(weatherData.main.temp);
+          const feels   = Math.round(weatherData.main.feels_like);
+          const humidity = weatherData.main.humidity;
+          const desc    = weatherData.weather[0].description;
+          const condition = weatherData.weather[0].main;
 
+          weatherContext = `\n\nCURRENT WEATHER IN ${city.toUpperCase()}: ${temp}°C (feels like ${feels}°C), ${desc}, humidity ${humidity}%.
+
+WEATHER-BASED STYLING RULES:
+${temp >= 35 ? "- Very hot: suggest light cotton, linen, breathable fabrics only. NO heavy fabrics, silk or synthetic." : ""}
+${temp >= 28 && temp < 35 ? "- Warm weather: suggest cotton, georgette, chiffon. Light and airy fabrics." : ""}
+${temp >= 20 && temp < 28 ? "- Pleasant weather: most fabrics work well. Good for heavier embroidery and embellishments." : ""}
+${temp < 20 ? "- Cool weather: suggest layering, pashmina, velvet, heavier fabrics. Recommend a light jacket or shawl." : ""}
+${condition === "Rain" || condition === "Drizzle" || condition === "Thunderstorm" ? "- RAINING: suggest darker colors that don't show water stains. Recommend waterproof or block heels instead of stilettos. Suggest minimal makeup that won't run. Recommend a dupatta that doubles as cover." : ""}
+${humidity > 80 ? "- Very humid: suggest matte makeup products, waterproof kajal. Avoid heavy foundation. Suggest hair styles that work in humidity (buns, braids) over blow-dried styles." : ""}`;
+        }
+      } catch (weatherErr) {
+        console.log("Weather fetch error:", weatherErr);
+      }
+    }
+
+    // Call Groq API with weather context
     const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -19,7 +48,7 @@ export default async function handler(req, res) {
         model: "llama-3.3-70b-versatile",
         max_tokens: 1000,
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: systemPrompt + weatherContext },
           ...messages
         ]
       })
@@ -34,7 +63,7 @@ export default async function handler(req, res) {
 
     // Save to Supabase
     try {
-      const saveRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/chat_history`, {
+      await fetch(`${process.env.SUPABASE_URL}/rest/v1/chat_history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +78,6 @@ export default async function handler(req, res) {
           bot_reply: reply
         })
       });
-      console.log("Supabase save status:", saveRes.status);
     } catch (dbErr) {
       console.log("Supabase error:", dbErr);
     }
