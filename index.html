@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StyleBot — Your AI Fashion Stylist</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a14;
+      color: white;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(10,10,20,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .nav-btn {
+      background: linear-gradient(135deg, #ff3f6c, #ff6b9d);
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,63,108,0.4); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 60px;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(255,63,108,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(15,52,96,0.3) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,63,108,0.15);
+      border: 1px solid rgba(255,63,108,0.3);
+      color: #ff6b9d;
+      padding: 6px 16px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(40px, 8vw, 80px);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .hero h1 span {
+      font-style: italic;
+      background: linear-gradient(135deg, #ff3f6c, #ff9a9e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(16px, 2.5vw, 20px);
+      color: rgba(255,255,255,0.6);
+      max-width: 560px;
+      line-height: 1.6;
+      margin-bottom: 40px;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 60px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #ff3f6c, #ff6b9d);
+      color: white;
+      border: none;
+      border-radius: 32px;
+      padding: 16px 36px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,63,108,0.4); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: white;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 32px;
+      padding: 16px 36px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+
+    /* DEMO CARD */
+    .demo-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 24px;
+      max-width: 480px;
+      width: 100%;
+      text-align: left;
+      backdrop-filter: blur(8px);
+    }
+    .demo-msg {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+    .demo-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .demo-avatar.bot { background: linear-gradient(135deg, #1a1a2e, #0f3460); }
+    .demo-avatar.user { background: linear-gradient(135deg, #e8d5c4, #d4b896); }
+    .demo-bubble {
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 85%;
+    }
+    .demo-bubble.bot { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+    .demo-bubble.user {
+      background: linear-gradient(135deg, #ff3f6c, #ff6b9d);
+      color: white;
+      margin-left: auto;
+    }
+    .demo-shop {
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 8px;
+      margin-left: 42px;
+    }
+    .demo-shop-title { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+    .demo-shop-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+    .demo-shop-btn {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      border: none;
+      cursor: default;
+    }
+
+    /* FEATURES */
+    .features {
+      padding: 80px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #ff6b9d;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 44px);
+      text-align: center;
+      margin-bottom: 48px;
+      line-height: 1.2;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+    .feature-card:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,63,108,0.2);
+      transform: translateY(-4px);
+    }
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: white;
+    }
+    .feature-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+    }
+
+    /* WHO IS IT FOR */
+    .for-section {
+      padding: 60px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .for-cards {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+    .for-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 32px 24px;
+      width: 200px;
+      transition: all 0.3s;
+    }
+    .for-card:hover {
+      background: rgba(255,63,108,0.08);
+      border-color: rgba(255,63,108,0.3);
+      transform: translateY(-4px);
+    }
+    .for-emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+    .for-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+    .for-desc { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+    /* HOW IT WORKS */
+    .how-section {
+      padding: 80px 24px;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .steps {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 48px;
+      position: relative;
+    }
+    .step {
+      flex: 1;
+      min-width: 180px;
+      max-width: 220px;
+      padding: 24px 16px;
+      position: relative;
+    }
+    .step-num {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #ff3f6c, #ff6b9d);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700;
+      margin: 0 auto 16px;
+    }
+    .step-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .step-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+    /* CTA */
+    .cta-section {
+      padding: 80px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,63,108,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 48px);
+      margin-bottom: 16px;
+    }
+    .cta-sub {
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 36px;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 32px 40px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-logo { font-size: 18px; }
+      .hero { padding: 100px 20px 40px; }
+      .features { padding: 60px 20px; }
+      footer { padding: 24px 20px; flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">✨ StyleBot</div>
+  <a href="/chat.html" class="nav-btn">Get Started Free →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">✨ AI Powered Fashion Stylist</div>
+  <h1>Your Personal<br/><span>Style Guide</span><br/>for Every Occasion</h1>
+  <p class="hero-sub">
+    Get a complete head-to-toe look — outfit, jewellery, makeup, hairstyle and shopping links — personalized for your city, budget and skin tone.
+  </p>
+  <div class="hero-btns">
+    <a href="/chat.html" class="btn-primary">✨ Get My Look Free</a>
+    <a href="#how" class="btn-secondary">See How It Works</a>
+  </div>
+
+  <!-- Demo Card -->
+  <div class="demo-card">
+    <div class="demo-msg">
+      <div class="demo-avatar user">👤</div>
+      <div class="demo-bubble user">I have a wedding in Hyderabad, budget ₹4000, wheatish skin</div>
+    </div>
+    <div class="demo-msg">
+      <div class="demo-avatar bot">✨</div>
+      <div class="demo-bubble bot">Perfect! For a Hyderabad wedding with wheatish skin, I suggest a royal blue georgette saree with gold zari border — stunning against your skin tone! 👗</div>
+    </div>
+    <div class="demo-shop">
+      <div class="demo-shop-title">✨ Shop This Look</div>
+      <div class="demo-shop-btns">
+        <span class="demo-shop-btn" style="background:#ff3f6c;color:white;">🛍️ Myntra</span>
+        <span class="demo-shop-btn" style="background:#ff9900;color:white;">📦 Amazon</span>
+        <span class="demo-shop-btn" style="background:#1a1a2e;color:white;">🏪 Ajio</span>
+        <span class="demo-shop-btn" style="background:#fc2779;color:white;">💄 Nykaa</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <div class="section-label">What StyleBot Does</div>
+  <div class="section-title">Everything you need<br/>to look your best</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">👗</span>
+      <div class="feature-title">Complete Head-to-Toe Look</div>
+      <div class="feature-desc">Outfit, footwear, jewellery, bag, makeup and hairstyle — all in one recommendation tailored for your occasion.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🛍️</span>
+      <div class="feature-title">Shop Directly</div>
+      <div class="feature-desc">Every recommendation comes with direct shopping links to Myntra, Amazon, Ajio and Nykaa.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📍</span>
+      <div class="feature-title">City & Weather Aware</div>
+      <div class="feature-desc">StyleBot knows your city's weather and culture — Mumbai summer looks different from Delhi winter.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🎨</span>
+      <div class="feature-title">Skin Tone Personalized</div>
+      <div class="feature-desc">Recommendations based on your skin tone and skin type — colors and makeup that actually suit you.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💰</span>
+      <div class="feature-title">Budget Friendly</div>
+      <div class="feature-desc">Set your budget from ₹500 to ₹10,000 — StyleBot finds the best look within your price range.</div>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💬</span>
+      <div class="feature-title">Natural Conversation</div>
+      <div class="feature-desc">Just talk naturally — ask follow ups, request changes, get alternatives. Like chatting with a stylist friend.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IS IT FOR -->
+<section class="for-section">
+  <div class="section-label">For Everyone</div>
+  <div class="section-title">Style advice for<br/>every person</div>
+  <div class="for-cards">
+    <div class="for-card">
+      <span class="for-emoji">👩</span>
+      <div class="for-title">Women</div>
+      <div class="for-desc">Sarees, kurtis, western, fusion — complete looks for every occasion</div>
+    </div>
+    <div class="for-card">
+      <span class="for-emoji">👨</span>
+      <div class="for-title">Men</div>
+      <div class="for-desc">Kurtas, sherwanis, formals, casuals — sharp looks for every event</div>
+    </div>
+    <div class="for-card">
+      <span class="for-emoji">👦</span>
+      <div class="for-title">Kids</div>
+      <div class="for-desc">Age-appropriate, comfortable outfits for every occasion and season</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="section-label">How It Works</div>
+  <div class="section-title">3 steps to your<br/>perfect look</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Tell StyleBot</div>
+      <div class="step-desc">Describe your occasion, city, budget, skin tone and body type</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Get Your Look</div>
+      <div class="step-desc">Receive a complete head-to-toe recommendation in seconds</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Shop It</div>
+      <div class="step-desc">Click Myntra, Amazon, Ajio or Nykaa to buy each item directly</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-title">Ready to look<br/><span style="font-style:italic;background:linear-gradient(135deg,#ff3f6c,#ff9a9e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">amazing?</span></div>
+  <div class="cta-sub">Free to use. No signup required. Just describe your occasion.</div>
+  <a href="/chat.html" class="btn-primary" style="font-size:18px;padding:18px 48px;">✨ Get My Look Free</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">✨ StyleBot</div>
+  <div class="footer-text">Built with ❤️ for Indian fashion lovers</div>
+  <div class="footer-text">stylebot-three.vercel.app</div>
+</footer>
+
+</body>
+</html>
