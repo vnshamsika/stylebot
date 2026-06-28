@@ -7,14 +7,22 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── Light mode (default) ── */
     body {
       font-family: 'Inter', sans-serif;
       background: #faf8f5;
+      color: #1a1a2e;
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
     }
+
+    /* ── Dark mode ── */
+    body.dark { background: #0a0a14; color: #e8e0d8; }
+
     header {
       width: 100%;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -31,16 +39,9 @@
     .header-left { display: flex; flex-direction: column; }
     header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-size: 22px; font-weight: 600; letter-spacing: 1px;
     }
-    header p {
-      font-size: 11px;
-      opacity: 0.7;
-      margin-top: 2px;
-      letter-spacing: 0.5px;
-    }
+    header p { font-size: 11px; opacity: 0.7; margin-top: 2px; letter-spacing: 0.5px; }
     .header-btns { display: flex; gap: 8px; align-items: center; }
     .hdr-btn {
       background: rgba(255,255,255,0.15);
@@ -57,40 +58,49 @@
     }
     .hdr-btn:hover { background: rgba(255,255,255,0.25); }
     .hdr-btn.danger { border-color: rgba(231,76,60,0.5); color: #ff8a80; }
+
+    /* Dark mode toggle */
+    #dark-toggle {
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 8px 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1;
+    }
+    #dark-toggle:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
+
+    /* ── Modal ── */
     #auth-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      display: none; position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
+      z-index: 1000; align-items: center; justify-content: center;
     }
     #auth-modal.open { display: flex; }
     .modal-box {
       background: white;
-      border-radius: 20px;
-      padding: 32px;
-      width: 90%;
-      max-width: 400px;
+      border-radius: 20px; padding: 32px;
+      width: 90%; max-width: 400px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
       position: relative;
+      transition: background 0.3s;
     }
+    body.dark .modal-box { background: #16213e; }
     .modal-title {
       font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      color: #1a1a2e;
-      margin-bottom: 6px;
+      font-size: 22px; color: #1a1a2e; margin-bottom: 6px;
     }
+    body.dark .modal-title { color: #e8e0d8; }
     .modal-subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
     .modal-tabs {
       display: flex; gap: 4px;
-      background: #f0ebe5;
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 24px;
+      background: #f0ebe5; border-radius: 12px;
+      padding: 4px; margin-bottom: 24px;
     }
+    body.dark .modal-tabs { background: #0f3460; }
     .modal-tab {
       flex: 1; padding: 8px; border: none;
       border-radius: 8px; font-size: 13px; cursor: pointer;
@@ -101,13 +111,17 @@
       background: white; color: #1a1a2e;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
+    body.dark .modal-tab.active { background: #1a1a2e; color: white; }
     .modal-input {
       width: 100%; padding: 12px 16px;
       border: 1.5px solid #e8e0d8; border-radius: 12px;
       font-size: 14px; font-family: 'Inter', sans-serif;
-      outline: none; margin-bottom: 12px; transition: border-color 0.2s;
+      outline: none; margin-bottom: 12px; transition: all 0.2s;
+      background: white; color: #1a1a2e;
     }
+    body.dark .modal-input { background: #0a0a14; border-color: #0f3460; color: #e8e0d8; }
     .modal-input:focus { border-color: #1a1a2e; }
+    body.dark .modal-input:focus { border-color: #4169e1; }
     .modal-submit {
       width: 100%; padding: 12px;
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
@@ -123,13 +137,16 @@
     }
     .modal-error { color: #e74c3c; font-size: 12px; margin-bottom: 8px; display: none; }
     .modal-success { color: #27ae60; font-size: 12px; margin-bottom: 8px; display: none; }
+
+    /* ── History panel ── */
     #history-panel {
       display: none; position: fixed;
       top: 0; right: 0; width: 340px; height: 100%;
       background: white; z-index: 999;
       box-shadow: -4px 0 20px rgba(0,0,0,0.1);
-      flex-direction: column;
+      flex-direction: column; transition: background 0.3s;
     }
+    body.dark #history-panel { background: #16213e; }
     #history-panel.open { display: flex; }
     .history-header {
       padding: 20px;
@@ -145,18 +162,23 @@
     }
     .history-item {
       background: #faf8f5; border: 1px solid #f0ebe5;
-      border-radius: 12px; padding: 12px;
+      border-radius: 12px; padding: 12px; transition: background 0.3s;
     }
+    body.dark .history-item { background: #0f3460; border-color: #1a1a2e; }
     .history-item-q { font-size: 12px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px; }
+    body.dark .history-item-q { color: #e8e0d8; }
     .history-item-a { font-size: 11px; color: #888; line-height: 1.5; max-height: 60px; overflow: hidden; }
     .history-item-date { font-size: 10px; color: #bbb; margin-top: 6px; }
     .history-empty { text-align: center; color: #888; font-size: 13px; margin-top: 40px; }
+
+    /* ── Chat ── */
     #chat-container {
       width: 100%; max-width: 720px; flex: 1;
       display: flex; flex-direction: column;
       padding: 24px 16px 16px; gap: 16px;
     }
-    .message { display: flex; gap: 10px; align-items: flex-start; }
+    .message { display: flex; gap: 10px; align-items: flex-start; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .message.user { flex-direction: row-reverse; }
     .avatar {
       width: 38px; height: 38px; border-radius: 50%;
@@ -170,6 +192,7 @@
       max-width: 80%; padding: 14px 18px;
       border-radius: 18px; font-size: 14px;
       line-height: 1.7; white-space: pre-wrap;
+      transition: background 0.3s, color 0.3s;
     }
     .bot-bubble {
       background: white; color: #1a1a2e;
@@ -177,32 +200,42 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       border: 1px solid #f0ebe5;
     }
+    body.dark .bot-bubble {
+      background: #16213e; color: #e8e0d8;
+      border-color: #0f3460;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
     .user-bubble {
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
       color: white; border-bottom-right-radius: 4px;
       box-shadow: 0 2px 12px rgba(15,52,96,0.3);
     }
+
+    /* ── Shop card ── */
     .shop-card {
       background: #faf8f5; border: 1px solid #e8e0d8;
       border-radius: 14px; padding: 14px; margin-top: 12px;
+      transition: background 0.3s;
     }
+    body.dark .shop-card { background: #0f3460; border-color: #1a1a2e; }
     .shop-card-title {
       font-family: 'Playfair Display', serif;
       font-size: 14px; color: #1a1a2e;
       margin-bottom: 10px; font-weight: 600;
     }
+    body.dark .shop-card-title { color: #e8e0d8; }
     .shop-item {
       display: flex; justify-content: space-between;
       align-items: center; padding: 5px 0;
       border-bottom: 1px solid #f0ebe5;
       font-size: 12px; color: #1a1a2e;
     }
+    body.dark .shop-item { border-color: #1a1a2e; color: #e8e0d8; }
     .shop-item:last-of-type { border-bottom: none; }
     .shop-item-price { font-weight: 600; color: #0f3460; margin-left: 8px; white-space: nowrap; }
-    .shop-total {
-      font-size: 11px; color: #888; margin-top: 8px;
-      padding-top: 6px; border-top: 1px solid #e8e0d8;
-    }
+    body.dark .shop-item-price { color: #7eb8f7; }
+    .shop-total { font-size: 11px; color: #888; margin-top: 8px; padding-top: 6px; border-top: 1px solid #e8e0d8; }
+    body.dark .shop-total { border-color: #1a1a2e; }
     .shop-buttons { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
     .shop-store-btn {
       padding: 6px 12px; border-radius: 20px; border: none;
@@ -221,6 +254,8 @@
       font-family: 'Inter', sans-serif; padding: 0;
     }
     .shop-share-btn:hover { color: #1a1a2e; }
+
+    /* ── Bars ── */
     #personal-bar {
       width: 100%; max-width: 720px;
       display: flex; align-items: center; gap: 8px;
@@ -228,7 +263,9 @@
       border-top: 1px solid #f0ebe5;
       position: sticky; bottom: 188px;
       overflow-x: auto; scrollbar-width: none;
+      transition: background 0.3s, border-color 0.3s;
     }
+    body.dark #personal-bar { background: #16213e; border-color: #0f3460; }
     #personal-bar::-webkit-scrollbar { display: none; }
     .personal-select {
       background: #faf8f5; border: 1.5px solid #e8e0d8;
@@ -237,6 +274,7 @@
       font-weight: 500; color: #1a1a2e; outline: none;
       white-space: nowrap; transition: all 0.2s;
     }
+    body.dark .personal-select { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
     .personal-select:focus { border-color: #1a1a2e; }
     #city-input {
       width: 120px; background: #faf8f5;
@@ -245,7 +283,7 @@
       font-family: 'Inter', sans-serif; font-weight: 500;
       color: #1a1a2e; outline: none; transition: all 0.2s;
     }
-    #city-input:focus { border-color: #1a1a2e; }
+    body.dark #city-input { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
     #city-input::placeholder { color: #aaa; }
     #gender-bar {
       width: 100%; max-width: 720px;
@@ -253,7 +291,9 @@
       padding: 10px 16px; background: white;
       border-top: 1px solid #f0ebe5;
       position: sticky; bottom: 152px;
+      transition: background 0.3s, border-color 0.3s;
     }
+    body.dark #gender-bar { background: #16213e; border-color: #0f3460; }
     .gender-label { font-size: 12px; color: #888; white-space: nowrap; font-weight: 500; }
     .gender-btn {
       background: #faf8f5; border: 1.5px solid #e8e0d8;
@@ -261,7 +301,9 @@
       cursor: pointer; font-family: 'Inter', sans-serif;
       font-weight: 500; color: #1a1a2e; transition: all 0.2s;
     }
+    body.dark .gender-btn { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
     .gender-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
+    body.dark .gender-btn.active { background: #4169e1; border-color: #4169e1; }
     .gender-btn:hover { background: #1a1a2e; color: white; border-color: #1a1a2e; }
     #budget-bar {
       width: 100%; max-width: 720px;
@@ -270,23 +312,28 @@
       border-top: 1px solid #f0ebe5;
       position: sticky; bottom: 116px;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+      transition: background 0.3s, border-color 0.3s;
     }
+    body.dark #budget-bar { background: #16213e; border-color: #0f3460; box-shadow: 0 -2px 10px rgba(0,0,0,0.2); }
     .budget-label { font-size: 12px; color: #888; white-space: nowrap; font-weight: 500; }
-    #budget-slider { flex: 1; accent-color: #0f3460; }
+    #budget-slider { flex: 1; accent-color: #4169e1; }
     #budget-input {
       width: 70px; border: 1.5px solid #e8e0d8;
       border-radius: 8px; padding: 4px 8px;
       font-family: 'Inter', sans-serif; font-size: 13px;
       font-weight: 600; color: #0f3460; outline: none; text-align: center;
+      background: white; transition: all 0.2s;
     }
-    #budget-input:focus { border-color: #0f3460; }
+    body.dark #budget-input { background: #0f3460; border-color: #1a1a2e; color: #7eb8f7; }
     #occasion-bar {
       width: 100%; max-width: 720px;
       display: flex; gap: 8px; padding: 10px 16px;
       overflow-x: auto; background: white;
       border-top: 1px solid #f0ebe5;
       position: sticky; bottom: 68px; scrollbar-width: none;
+      transition: background 0.3s, border-color 0.3s;
     }
+    body.dark #occasion-bar { background: #16213e; border-color: #0f3460; }
     #occasion-bar::-webkit-scrollbar { display: none; }
     .occ-btn {
       background: #faf8f5; border: 1.5px solid #e8e0d8;
@@ -295,6 +342,7 @@
       font-family: 'Inter', sans-serif; color: #1a1a2e;
       font-weight: 500; transition: all 0.2s;
     }
+    body.dark .occ-btn { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
     .occ-btn:hover {
       background: #1a1a2e; color: white; border-color: #1a1a2e;
       transform: translateY(-1px);
@@ -306,15 +354,20 @@
       background: white; border-top: 1px solid #f0ebe5;
       position: sticky; bottom: 0;
       box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+      transition: background 0.3s, border-color 0.3s;
     }
+    body.dark #input-area { background: #16213e; border-color: #0f3460; box-shadow: 0 -4px 20px rgba(0,0,0,0.3); }
     #user-input {
       flex: 1; padding: 12px 18px;
       border: 1.5px solid #e8e0d8; border-radius: 24px;
       font-size: 14px; outline: none;
       font-family: 'Inter', sans-serif;
-      background: #faf8f5; color: #1a1a2e; transition: border-color 0.2s;
+      background: #faf8f5; color: #1a1a2e; transition: all 0.2s;
     }
+    body.dark #user-input { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
     #user-input:focus { border-color: #0f3460; background: white; }
+    body.dark #user-input:focus { border-color: #4169e1; background: #0a0a14; }
+    #user-input::placeholder { color: #aaa; }
     #send-btn {
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
       color: white; border: none; border-radius: 24px;
@@ -330,6 +383,7 @@
       width: 7px; height: 7px; background: #c8bfb5;
       border-radius: 50%; animation: bounce 1.2s infinite;
     }
+    body.dark .typing span { background: #4169e1; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce {
@@ -343,7 +397,9 @@
       cursor: pointer; font-family: 'Inter', sans-serif;
       font-weight: 500; transition: all 0.2s;
     }
+    body.dark .share-btn { background: #0f3460; color: #e8e0d8; }
     .share-btn:hover { background: #1a1a2e; color: white; transform: translateY(-1px); }
+
     @media (max-width: 600px) {
       header h1 { font-size: 18px; }
       header p { font-size: 10px; }
@@ -370,6 +426,7 @@
     <p>YOUR PERSONAL AI FASHION STYLIST</p>
   </div>
   <div class="header-btns">
+    <button id="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
     <button class="hdr-btn" id="login-btn" onclick="openAuth()">👤 Login / Sign Up</button>
     <button class="hdr-btn" id="history-btn" onclick="openHistory()" style="display:none;">📋 History</button>
     <button class="hdr-btn danger" id="logout-btn" onclick="logout()" style="display:none;">🚪 Logout</button>
@@ -474,6 +531,19 @@
     localStorage.removeItem("sb_user");
   }
 
+  // ── Dark mode ─────────────────────────────────────
+  function toggleDark() {
+    const isDark = document.body.classList.toggle("dark");
+    document.getElementById("dark-toggle").textContent = isDark ? "☀️" : "🌙";
+    localStorage.setItem("stylebot_dark", isDark ? "1" : "0");
+  }
+
+  // Restore dark mode preference
+  if (localStorage.getItem("stylebot_dark") === "1") {
+    document.body.classList.add("dark");
+    document.getElementById("dark-toggle").textContent = "☀️";
+  }
+
   let currentWeather = null;
 
   async function fetchWeather(city) {
@@ -572,12 +642,8 @@
     if (!skinTone || !skinToneGuide[skinTone]) return { rating: "✨", text: "Looks great!" };
     const guide = skinToneGuide[skinTone];
     const lower = colorName.toLowerCase();
-    if (guide.good.some(g => lower.includes(g) || g.includes(lower))) {
-      return { rating: "🔥", text: "Perfect match!" };
-    }
-    if (guide.avoid.some(a => lower.includes(a) || a.includes(lower))) {
-      return { rating: "⚠️", text: "May wash out" };
-    }
+    if (guide.good.some(g => lower.includes(g) || g.includes(lower))) return { rating: "🔥", text: "Perfect match!" };
+    if (guide.avoid.some(a => lower.includes(a) || a.includes(lower))) return { rating: "⚠️", text: "May wash out" };
     return { rating: "✨", text: "Looks good!" };
   }
 
@@ -585,10 +651,8 @@
     const start = text.indexOf("STYLEBOT_ITEMS_START");
     const end   = text.indexOf("STYLEBOT_ITEMS_END");
     if (start === -1 || end === -1) return;
-
     const itemsText = text.substring(start + 20, end).trim();
     const lines = itemsText.split("\n").filter(l => l.trim() && l.includes("|"));
-
     const detectedColors = [];
     lines.forEach(line => {
       const colonIdx = line.indexOf(":");
@@ -600,46 +664,41 @@
       const color = extractColor(name);
       if (color) detectedColors.push({ label, name, color });
     });
-
     if (!detectedColors.length) return;
-
     const skinTone = document.getElementById("skin-tone-select")?.value || "";
     const skinTones = ["fair", "wheatish", "dusky", "dark"];
-
+    const isDark = document.body.classList.contains("dark");
     const card = document.createElement("div");
     card.style.cssText = `
-      background: white; border: 1px solid #f0ebe5;
+      background: ${isDark ? "#0f3460" : "white"};
+      border: 1px solid ${isDark ? "#1a1a2e" : "#f0ebe5"};
       border-radius: 14px; padding: 14px; margin-top: 10px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     `;
-
-    let html = `<div style="font-family:'Playfair Display',serif;font-size:14px;color:#1a1a2e;font-weight:600;margin-bottom:12px;">🎨 Color Preview</div>`;
-
+    let html = `<div style="font-family:'Playfair Display',serif;font-size:14px;color:${isDark ? "#e8e0d8" : "#1a1a2e"};font-weight:600;margin-bottom:12px;">🎨 Color Preview</div>`;
     detectedColors.slice(0, 3).forEach(item => {
       html += `<div style="margin-bottom:12px;">
         <div style="font-size:10px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">${item.label}</div>
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="width:44px;height:44px;border-radius:10px;background:${item.color.hex};box-shadow:0 2px 8px rgba(0,0,0,0.15);flex-shrink:0;border:1px solid rgba(0,0,0,0.08);"></div>
           <div style="flex:1;">
-            <div style="font-size:13px;font-weight:600;color:#1a1a2e;text-transform:capitalize;margin-bottom:3px;">${item.color.name}</div>
+            <div style="font-size:13px;font-weight:600;color:${isDark ? "#e8e0d8" : "#1a1a2e"};text-transform:capitalize;margin-bottom:3px;">${item.color.name}</div>
             ${skinTone ? (() => {
               const r = getSkinToneRating(item.color.name, skinTone);
-              return `<div style="font-size:11px;color:#555;">${r.rating} For your <strong>${skinTone}</strong> skin: ${r.text}</div>`;
+              return `<div style="font-size:11px;color:#888;">${r.rating} For your <strong>${skinTone}</strong> skin: ${r.text}</div>`;
             })() : `<div style="display:flex;gap:4px;flex-wrap:wrap;">${skinTones.map(st => {
               const r = getSkinToneRating(item.color.name, st);
-              return `<span style="background:#faf8f5;border:1px solid #f0ebe5;border-radius:6px;padding:2px 7px;font-size:10px;color:#1a1a2e;"><span style="font-weight:600;text-transform:capitalize;">${st}</span> ${r.rating}</span>`;
+              return `<span style="background:${isDark ? "#1a1a2e" : "#faf8f5"};border:1px solid ${isDark ? "#0f3460" : "#f0ebe5"};border-radius:6px;padding:2px 7px;font-size:10px;color:${isDark ? "#e8e0d8" : "#1a1a2e"};"><span style="font-weight:600;text-transform:capitalize;">${st}</span> ${r.rating}</span>`;
             }).join("")}</div>`}
           </div>
         </div>
       </div>`;
     });
-
     if (skinTone && skinToneGuide[skinTone]) {
-      html += `<div style="background:#faf8f5;border-radius:10px;padding:8px 12px;font-size:11px;color:#0f3460;margin-top:4px;">
+      html += `<div style="background:${isDark ? "#1a1a2e" : "#faf8f5"};border-radius:10px;padding:8px 12px;font-size:11px;color:${isDark ? "#7eb8f7" : "#0f3460"};margin-top:4px;">
         💡 <strong>Tip:</strong> ${skinToneGuide[skinTone].tip}
       </div>`;
     }
-
     card.innerHTML = html;
     bubble.appendChild(card);
   }
@@ -1177,7 +1236,7 @@ Then give a warm closing line.
   if (currentUser) showLoggedIn(currentUser.email);
 
   renderOccasions();
-  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city to get live weather and weather-appropriate looks! ☀️🌧️");
+  addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city for live weather, select skin tone for color previews, and get weather-appropriate looks! ☀️🎨");
 </script>
 
 </body>
