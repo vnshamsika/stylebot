@@ -488,7 +488,6 @@
     } catch(e) {}
   }
 
-  // ── Weather shows as chat message ─────────────────
   function showWeatherMessage(w) {
     const existing = document.getElementById("weather-msg");
     if (existing) existing.remove();
@@ -515,6 +514,134 @@
       "Snow": "❄️", "Mist": "🌫️", "Haze": "🌫️", "Fog": "🌫️"
     };
     return map[condition] || "🌤️";
+  }
+
+  // ── Color Preview ─────────────────────────────────
+  const colorMap = {
+    "red": "#e74c3c", "crimson": "#dc143c", "maroon": "#800000",
+    "pink": "#ff69b4", "rose": "#ff007f", "coral": "#ff6b6b",
+    "orange": "#e67e22", "peach": "#ffb347",
+    "yellow": "#f1c40f", "gold": "#ffd700", "mustard": "#e3b505",
+    "green": "#27ae60", "mint": "#98ff98", "olive": "#808000", "emerald": "#50c878",
+    "blue": "#2980b9", "navy": "#001f5b", "royal blue": "#4169e1",
+    "sky blue": "#87ceeb", "teal": "#008080",
+    "purple": "#8e44ad", "violet": "#ee82ee", "lavender": "#e6e6fa", "mauve": "#e0b0ff",
+    "white": "#f5f5f5", "cream": "#fffdd0", "ivory": "#fffff0", "off white": "#faf9f6",
+    "black": "#2c2c2c", "charcoal": "#36454f",
+    "grey": "#95a5a6", "gray": "#95a5a6", "silver": "#c0c0c0",
+    "brown": "#8b4513", "beige": "#f5f0e8", "tan": "#d2b48c", "camel": "#c19a6b",
+    "turquoise": "#40e0d0", "cyan": "#00bcd4",
+    "magenta": "#ff00ff", "fuchsia": "#ff0090",
+    "burgundy": "#800020", "wine": "#722f37",
+    "indigo": "#4b0082"
+  };
+
+  const skinToneGuide = {
+    "fair": {
+      good: ["navy", "royal blue", "blue", "emerald", "green", "burgundy", "wine", "maroon", "purple", "black", "red", "coral", "teal"],
+      avoid: ["white", "cream", "ivory", "beige", "peach"],
+      tip: "Deep and jewel tones create beautiful contrast on fair skin"
+    },
+    "wheatish": {
+      good: ["orange", "coral", "gold", "mustard", "olive", "teal", "turquoise", "pink", "rose", "red", "purple"],
+      avoid: ["pale pink", "lavender", "light yellow"],
+      tip: "Warm and earthy tones complement wheatish skin beautifully"
+    },
+    "dusky": {
+      good: ["yellow", "gold", "orange", "red", "white", "cream", "ivory", "pink", "magenta", "fuchsia", "royal blue", "emerald"],
+      avoid: ["brown", "olive", "dark grey"],
+      tip: "Bright and warm colors make dusky skin glow beautifully"
+    },
+    "dark": {
+      good: ["yellow", "gold", "white", "cream", "red", "orange", "magenta", "fuchsia", "pink", "royal blue", "emerald", "turquoise"],
+      avoid: ["brown", "maroon", "olive", "navy"],
+      tip: "Bold bright colors create stunning contrast on dark skin"
+    }
+  };
+
+  function extractColor(text) {
+    const lower = text.toLowerCase();
+    const colorKeys = Object.keys(colorMap).sort((a, b) => b.length - a.length);
+    for (const color of colorKeys) {
+      if (lower.includes(color)) return { name: color, hex: colorMap[color] };
+    }
+    return null;
+  }
+
+  function getSkinToneRating(colorName, skinTone) {
+    if (!skinTone || !skinToneGuide[skinTone]) return { rating: "✨", text: "Looks great!" };
+    const guide = skinToneGuide[skinTone];
+    const lower = colorName.toLowerCase();
+    if (guide.good.some(g => lower.includes(g) || g.includes(lower))) {
+      return { rating: "🔥", text: "Perfect match!" };
+    }
+    if (guide.avoid.some(a => lower.includes(a) || a.includes(lower))) {
+      return { rating: "⚠️", text: "May wash out" };
+    }
+    return { rating: "✨", text: "Looks good!" };
+  }
+
+  function showColorPreview(text, bubble) {
+    const start = text.indexOf("STYLEBOT_ITEMS_START");
+    const end   = text.indexOf("STYLEBOT_ITEMS_END");
+    if (start === -1 || end === -1) return;
+
+    const itemsText = text.substring(start + 20, end).trim();
+    const lines = itemsText.split("\n").filter(l => l.trim() && l.includes("|"));
+
+    const detectedColors = [];
+    lines.forEach(line => {
+      const colonIdx = line.indexOf(":");
+      const pipeIdx  = line.lastIndexOf("|");
+      if (colonIdx === -1 || pipeIdx === -1) return;
+      const label = line.substring(0, colonIdx).trim();
+      const name  = line.substring(colonIdx + 1, pipeIdx).trim();
+      if (["HAIRSTYLE", "MAKEUP", "GROOMING"].includes(label.toUpperCase())) return;
+      const color = extractColor(name);
+      if (color) detectedColors.push({ label, name, color });
+    });
+
+    if (!detectedColors.length) return;
+
+    const skinTone = document.getElementById("skin-tone-select")?.value || "";
+    const skinTones = ["fair", "wheatish", "dusky", "dark"];
+
+    const card = document.createElement("div");
+    card.style.cssText = `
+      background: white; border: 1px solid #f0ebe5;
+      border-radius: 14px; padding: 14px; margin-top: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    `;
+
+    let html = `<div style="font-family:'Playfair Display',serif;font-size:14px;color:#1a1a2e;font-weight:600;margin-bottom:12px;">🎨 Color Preview</div>`;
+
+    detectedColors.slice(0, 3).forEach(item => {
+      html += `<div style="margin-bottom:12px;">
+        <div style="font-size:10px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">${item.label}</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:44px;height:44px;border-radius:10px;background:${item.color.hex};box-shadow:0 2px 8px rgba(0,0,0,0.15);flex-shrink:0;border:1px solid rgba(0,0,0,0.08);"></div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;color:#1a1a2e;text-transform:capitalize;margin-bottom:3px;">${item.color.name}</div>
+            ${skinTone ? (() => {
+              const r = getSkinToneRating(item.color.name, skinTone);
+              return `<div style="font-size:11px;color:#555;">${r.rating} For your <strong>${skinTone}</strong> skin: ${r.text}</div>`;
+            })() : `<div style="display:flex;gap:4px;flex-wrap:wrap;">${skinTones.map(st => {
+              const r = getSkinToneRating(item.color.name, st);
+              return `<span style="background:#faf8f5;border:1px solid #f0ebe5;border-radius:6px;padding:2px 7px;font-size:10px;color:#1a1a2e;"><span style="font-weight:600;text-transform:capitalize;">${st}</span> ${r.rating}</span>`;
+            }).join("")}</div>`}
+          </div>
+        </div>
+      </div>`;
+    });
+
+    if (skinTone && skinToneGuide[skinTone]) {
+      html += `<div style="background:#faf8f5;border-radius:10px;padding:8px 12px;font-size:11px;color:#0f3460;margin-top:4px;">
+        💡 <strong>Tip:</strong> ${skinToneGuide[skinTone].tip}
+      </div>`;
+    }
+
+    card.innerHTML = html;
+    bubble.appendChild(card);
   }
 
   const systemPrompts = {
@@ -935,6 +1062,7 @@ Then give a warm closing line.
       const cleanText = text.replace(/STYLEBOT_ITEMS_START[\s\S]*?STYLEBOT_ITEMS_END/g, "").trim();
       bubble.textContent = cleanText;
       parseAndShowShopCard(text, bubble);
+      showColorPreview(text, bubble);
     } else {
       bubble.textContent = text;
     }
