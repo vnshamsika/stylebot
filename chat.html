@@ -7,8 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    /* ── Light mode (default) ── */
     body {
       font-family: 'Inter', sans-serif;
       background: #faf8f5;
@@ -19,10 +17,7 @@
       min-height: 100vh;
       transition: background 0.3s, color 0.3s;
     }
-
-    /* ── Dark mode ── */
     body.dark { background: #0a0a14; color: #e8e0d8; }
-
     header {
       width: 100%;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -37,10 +32,7 @@
       box-shadow: 0 2px 20px rgba(0,0,0,0.3);
     }
     .header-left { display: flex; flex-direction: column; }
-    header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px; font-weight: 600; letter-spacing: 1px;
-    }
+    header h1 { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; letter-spacing: 1px; }
     header p { font-size: 11px; opacity: 0.7; margin-top: 2px; letter-spacing: 0.5px; }
     .header-btns { display: flex; gap: 8px; align-items: center; }
     .hdr-btn {
@@ -58,8 +50,6 @@
     }
     .hdr-btn:hover { background: rgba(255,255,255,0.25); }
     .hdr-btn.danger { border-color: rgba(231,76,60,0.5); color: #ff8a80; }
-
-    /* Dark mode toggle */
     #dark-toggle {
       background: rgba(255,255,255,0.15);
       border: 1.5px solid rgba(255,255,255,0.3);
@@ -72,7 +62,188 @@
     }
     #dark-toggle:hover { background: rgba(255,255,255,0.25); transform: scale(1.1); }
 
-    /* ── Modal ── */
+    /* ── Quiz Modal ── */
+    #quiz-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    #quiz-modal.open { display: flex; }
+    .quiz-box {
+      background: white;
+      border-radius: 24px;
+      padding: 32px 28px;
+      width: 90%;
+      max-width: 440px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+      position: relative;
+      animation: popIn 0.3s ease;
+    }
+    body.dark .quiz-box { background: #16213e; }
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .quiz-progress {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .quiz-dot {
+      flex: 1; height: 4px; border-radius: 2px;
+      background: #e8e0d8; transition: background 0.3s;
+    }
+    body.dark .quiz-dot { background: #0f3460; }
+    .quiz-dot.done { background: #0f3460; }
+    body.dark .quiz-dot.done { background: #4169e1; }
+    .quiz-step-label {
+      font-size: 11px; color: #888;
+      font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 8px;
+    }
+    .quiz-question {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; color: #1a1a2e;
+      margin-bottom: 6px; line-height: 1.3;
+    }
+    body.dark .quiz-question { color: #e8e0d8; }
+    .quiz-hint { font-size: 13px; color: #888; margin-bottom: 24px; }
+    .quiz-options { display: flex; flex-wrap: wrap; gap: 10px; }
+    .quiz-option {
+      padding: 10px 18px;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 24px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: #1a1a2e;
+      background: #faf8f5;
+      transition: all 0.2s;
+    }
+    body.dark .quiz-option { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
+    .quiz-option:hover, .quiz-option.selected {
+      background: #1a1a2e; color: white;
+      border-color: #1a1a2e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26,26,46,0.2);
+    }
+    body.dark .quiz-option:hover, body.dark .quiz-option.selected {
+      background: #4169e1; border-color: #4169e1;
+    }
+    .quiz-city-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e8e0d8;
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+      background: white; color: #1a1a2e;
+    }
+    body.dark .quiz-city-input { background: #0a0a14; border-color: #0f3460; color: #e8e0d8; }
+    .quiz-city-input:focus { border-color: #0f3460; }
+    .quiz-next-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white; border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      margin-top: 20px; transition: all 0.2s;
+    }
+    .quiz-next-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(15,52,96,0.3); }
+    .quiz-skip { text-align: center; margin-top: 12px; font-size: 12px; color: #aaa; cursor: pointer; }
+    .quiz-skip:hover { color: #888; }
+
+    /* ── Preferences Panel ── */
+    #prefs-panel {
+      display: none;
+      position: fixed;
+      top: 0; right: 0;
+      width: 340px; height: 100%;
+      background: white;
+      z-index: 999;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+      flex-direction: column;
+      transition: background 0.3s;
+    }
+    body.dark #prefs-panel { background: #16213e; }
+    #prefs-panel.open { display: flex; }
+    .prefs-header {
+      padding: 20px;
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .prefs-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; }
+    .prefs-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+    .prefs-list { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .pref-item {
+      background: #faf8f5;
+      border: 1px solid #f0ebe5;
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    body.dark .pref-item { background: #0f3460; border-color: #1a1a2e; }
+    .pref-item:hover {
+      border-color: #0f3460;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    body.dark .pref-item:hover { border-color: #4169e1; }
+    .pref-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .pref-value { font-size: 15px; font-weight: 600; color: #1a1a2e; }
+    body.dark .pref-value { color: #e8e0d8; }
+    .pref-edit { font-size: 11px; color: #0f3460; margin-top: 4px; }
+    body.dark .pref-edit { color: #7eb8f7; }
+
+    /* Single pref edit modal */
+    #pref-edit-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+    }
+    #pref-edit-modal.open { display: flex; }
+    .pref-edit-box {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      animation: popIn 0.2s ease;
+    }
+    body.dark .pref-edit-box { background: #16213e; }
+    .pref-edit-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; color: #1a1a2e; margin-bottom: 20px;
+    }
+    body.dark .pref-edit-title { color: #e8e0d8; }
+    .pref-edit-close {
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; font-size: 20px;
+      cursor: pointer; color: #888;
+    }
+
+    /* ── Auth Modal ── */
     #auth-modal {
       display: none; position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -81,36 +252,26 @@
     }
     #auth-modal.open { display: flex; }
     .modal-box {
-      background: white;
-      border-radius: 20px; padding: 32px;
+      background: white; border-radius: 20px; padding: 32px;
       width: 90%; max-width: 400px;
       box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      position: relative;
-      transition: background 0.3s;
+      position: relative; transition: background 0.3s;
     }
     body.dark .modal-box { background: #16213e; }
-    .modal-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px; color: #1a1a2e; margin-bottom: 6px;
-    }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 22px; color: #1a1a2e; margin-bottom: 6px; }
     body.dark .modal-title { color: #e8e0d8; }
     .modal-subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
     .modal-tabs {
-      display: flex; gap: 4px;
-      background: #f0ebe5; border-radius: 12px;
-      padding: 4px; margin-bottom: 24px;
+      display: flex; gap: 4px; background: #f0ebe5;
+      border-radius: 12px; padding: 4px; margin-bottom: 24px;
     }
     body.dark .modal-tabs { background: #0f3460; }
     .modal-tab {
-      flex: 1; padding: 8px; border: none;
-      border-radius: 8px; font-size: 13px; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-weight: 500;
-      color: #888; background: transparent; transition: all 0.2s;
+      flex: 1; padding: 8px; border: none; border-radius: 8px;
+      font-size: 13px; cursor: pointer; font-family: 'Inter', sans-serif;
+      font-weight: 500; color: #888; background: transparent; transition: all 0.2s;
     }
-    .modal-tab.active {
-      background: white; color: #1a1a2e;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
+    .modal-tab.active { background: white; color: #1a1a2e; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
     body.dark .modal-tab.active { background: #1a1a2e; color: white; }
     .modal-input {
       width: 100%; padding: 12px 16px;
@@ -120,8 +281,6 @@
       background: white; color: #1a1a2e;
     }
     body.dark .modal-input { background: #0a0a14; border-color: #0f3460; color: #e8e0d8; }
-    .modal-input:focus { border-color: #1a1a2e; }
-    body.dark .modal-input:focus { border-color: #4169e1; }
     .modal-submit {
       width: 100%; padding: 12px;
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
@@ -132,13 +291,12 @@
     .modal-submit:hover { opacity: 0.9; transform: translateY(-1px); }
     .modal-close {
       position: absolute; top: 16px; right: 16px;
-      background: none; border: none; font-size: 20px;
-      cursor: pointer; color: #888;
+      background: none; border: none; font-size: 20px; cursor: pointer; color: #888;
     }
     .modal-error { color: #e74c3c; font-size: 12px; margin-bottom: 8px; display: none; }
     .modal-success { color: #27ae60; font-size: 12px; margin-bottom: 8px; display: none; }
 
-    /* ── History panel ── */
+    /* ── History Panel ── */
     #history-panel {
       display: none; position: fixed;
       top: 0; right: 0; width: 340px; height: 100%;
@@ -156,14 +314,8 @@
     }
     .history-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; }
     .history-close { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
-    .history-list {
-      flex: 1; overflow-y: auto; padding: 16px;
-      display: flex; flex-direction: column; gap: 12px;
-    }
-    .history-item {
-      background: #faf8f5; border: 1px solid #f0ebe5;
-      border-radius: 12px; padding: 12px; transition: background 0.3s;
-    }
+    .history-list { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .history-item { background: #faf8f5; border: 1px solid #f0ebe5; border-radius: 12px; padding: 12px; transition: background 0.3s; }
     body.dark .history-item { background: #0f3460; border-color: #1a1a2e; }
     .history-item-q { font-size: 12px; font-weight: 600; color: #1a1a2e; margin-bottom: 6px; }
     body.dark .history-item-q { color: #e8e0d8; }
@@ -191,8 +343,7 @@
     .bubble {
       max-width: 80%; padding: 14px 18px;
       border-radius: 18px; font-size: 14px;
-      line-height: 1.7; white-space: pre-wrap;
-      transition: background 0.3s, color 0.3s;
+      line-height: 1.7; white-space: pre-wrap; transition: background 0.3s, color 0.3s;
     }
     .bot-bubble {
       background: white; color: #1a1a2e;
@@ -200,36 +351,17 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       border: 1px solid #f0ebe5;
     }
-    body.dark .bot-bubble {
-      background: #16213e; color: #e8e0d8;
-      border-color: #0f3460;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
-    }
+    body.dark .bot-bubble { background: #16213e; color: #e8e0d8; border-color: #0f3460; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
     .user-bubble {
       background: linear-gradient(135deg, #1a1a2e, #0f3460);
       color: white; border-bottom-right-radius: 4px;
       box-shadow: 0 2px 12px rgba(15,52,96,0.3);
     }
-
-    /* ── Shop card ── */
-    .shop-card {
-      background: #faf8f5; border: 1px solid #e8e0d8;
-      border-radius: 14px; padding: 14px; margin-top: 12px;
-      transition: background 0.3s;
-    }
+    .shop-card { background: #faf8f5; border: 1px solid #e8e0d8; border-radius: 14px; padding: 14px; margin-top: 12px; transition: background 0.3s; }
     body.dark .shop-card { background: #0f3460; border-color: #1a1a2e; }
-    .shop-card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 14px; color: #1a1a2e;
-      margin-bottom: 10px; font-weight: 600;
-    }
+    .shop-card-title { font-family: 'Playfair Display', serif; font-size: 14px; color: #1a1a2e; margin-bottom: 10px; font-weight: 600; }
     body.dark .shop-card-title { color: #e8e0d8; }
-    .shop-item {
-      display: flex; justify-content: space-between;
-      align-items: center; padding: 5px 0;
-      border-bottom: 1px solid #f0ebe5;
-      font-size: 12px; color: #1a1a2e;
-    }
+    .shop-item { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #f0ebe5; font-size: 12px; color: #1a1a2e; }
     body.dark .shop-item { border-color: #1a1a2e; color: #e8e0d8; }
     .shop-item:last-of-type { border-bottom: none; }
     .shop-item-price { font-weight: 600; color: #0f3460; margin-left: 8px; white-space: nowrap; }
@@ -237,131 +369,90 @@
     .shop-total { font-size: 11px; color: #888; margin-top: 8px; padding-top: 6px; border-top: 1px solid #e8e0d8; }
     body.dark .shop-total { border-color: #1a1a2e; }
     .shop-buttons { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-    .shop-store-btn {
-      padding: 6px 12px; border-radius: 20px; border: none;
-      font-size: 11px; font-weight: 600; cursor: pointer;
-      font-family: 'Inter', sans-serif; transition: all 0.2s;
-      text-decoration: none; display: inline-block; color: white;
-    }
+    .shop-store-btn { padding: 6px 12px; border-radius: 20px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s; text-decoration: none; display: inline-block; color: white; }
     .btn-myntra { background: #ff3f6c; }
     .btn-amazon { background: #ff9900; }
     .btn-ajio { background: #1a1a2e; }
     .btn-nykaa { background: #fc2779; }
     .shop-store-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-    .shop-share-btn {
-      margin-top: 8px; background: none; border: none;
-      font-size: 12px; color: #888; cursor: pointer;
-      font-family: 'Inter', sans-serif; padding: 0;
-    }
+    .shop-share-btn { margin-top: 8px; background: none; border: none; font-size: 12px; color: #888; cursor: pointer; font-family: 'Inter', sans-serif; padding: 0; }
     .shop-share-btn:hover { color: #1a1a2e; }
-
-    /* ── Bars ── */
     #personal-bar {
-      width: 100%; max-width: 720px;
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 16px; background: white;
-      border-top: 1px solid #f0ebe5;
-      position: sticky; bottom: 188px;
-      overflow-x: auto; scrollbar-width: none;
+      width: 100%; max-width: 720px; display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px; background: white; border-top: 1px solid #f0ebe5;
+      position: sticky; bottom: 188px; overflow-x: auto; scrollbar-width: none;
       transition: background 0.3s, border-color 0.3s;
     }
     body.dark #personal-bar { background: #16213e; border-color: #0f3460; }
     #personal-bar::-webkit-scrollbar { display: none; }
     .personal-select {
-      background: #faf8f5; border: 1.5px solid #e8e0d8;
-      border-radius: 20px; padding: 6px 12px; font-size: 12px;
-      cursor: pointer; font-family: 'Inter', sans-serif;
-      font-weight: 500; color: #1a1a2e; outline: none;
-      white-space: nowrap; transition: all 0.2s;
+      background: #faf8f5; border: 1.5px solid #e8e0d8; border-radius: 20px;
+      padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif;
+      font-weight: 500; color: #1a1a2e; outline: none; white-space: nowrap; transition: all 0.2s;
     }
     body.dark .personal-select { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
-    .personal-select:focus { border-color: #1a1a2e; }
     #city-input {
-      width: 120px; background: #faf8f5;
-      border: 1.5px solid #e8e0d8; border-radius: 20px;
-      padding: 6px 12px; font-size: 12px;
-      font-family: 'Inter', sans-serif; font-weight: 500;
+      width: 120px; background: #faf8f5; border: 1.5px solid #e8e0d8; border-radius: 20px;
+      padding: 6px 12px; font-size: 12px; font-family: 'Inter', sans-serif; font-weight: 500;
       color: #1a1a2e; outline: none; transition: all 0.2s;
     }
     body.dark #city-input { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
     #city-input::placeholder { color: #aaa; }
     #gender-bar {
-      width: 100%; max-width: 720px;
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 16px; background: white;
-      border-top: 1px solid #f0ebe5;
-      position: sticky; bottom: 152px;
-      transition: background 0.3s, border-color 0.3s;
+      width: 100%; max-width: 720px; display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px; background: white; border-top: 1px solid #f0ebe5;
+      position: sticky; bottom: 152px; transition: background 0.3s, border-color 0.3s;
     }
     body.dark #gender-bar { background: #16213e; border-color: #0f3460; }
     .gender-label { font-size: 12px; color: #888; white-space: nowrap; font-weight: 500; }
     .gender-btn {
-      background: #faf8f5; border: 1.5px solid #e8e0d8;
-      border-radius: 20px; padding: 6px 14px; font-size: 12px;
-      cursor: pointer; font-family: 'Inter', sans-serif;
-      font-weight: 500; color: #1a1a2e; transition: all 0.2s;
+      background: #faf8f5; border: 1.5px solid #e8e0d8; border-radius: 20px; padding: 6px 14px;
+      font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500;
+      color: #1a1a2e; transition: all 0.2s;
     }
     body.dark .gender-btn { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
     .gender-btn.active { background: #1a1a2e; color: white; border-color: #1a1a2e; }
     body.dark .gender-btn.active { background: #4169e1; border-color: #4169e1; }
     .gender-btn:hover { background: #1a1a2e; color: white; border-color: #1a1a2e; }
     #budget-bar {
-      width: 100%; max-width: 720px;
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 16px; background: white;
-      border-top: 1px solid #f0ebe5;
-      position: sticky; bottom: 116px;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
+      width: 100%; max-width: 720px; display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px; background: white; border-top: 1px solid #f0ebe5;
+      position: sticky; bottom: 116px; box-shadow: 0 -2px 10px rgba(0,0,0,0.04);
       transition: background 0.3s, border-color 0.3s;
     }
     body.dark #budget-bar { background: #16213e; border-color: #0f3460; box-shadow: 0 -2px 10px rgba(0,0,0,0.2); }
     .budget-label { font-size: 12px; color: #888; white-space: nowrap; font-weight: 500; }
     #budget-slider { flex: 1; accent-color: #4169e1; }
     #budget-input {
-      width: 70px; border: 1.5px solid #e8e0d8;
-      border-radius: 8px; padding: 4px 8px;
-      font-family: 'Inter', sans-serif; font-size: 13px;
-      font-weight: 600; color: #0f3460; outline: none; text-align: center;
-      background: white; transition: all 0.2s;
+      width: 70px; border: 1.5px solid #e8e0d8; border-radius: 8px; padding: 4px 8px;
+      font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; color: #0f3460;
+      outline: none; text-align: center; background: white; transition: all 0.2s;
     }
     body.dark #budget-input { background: #0f3460; border-color: #1a1a2e; color: #7eb8f7; }
     #occasion-bar {
-      width: 100%; max-width: 720px;
-      display: flex; gap: 8px; padding: 10px 16px;
-      overflow-x: auto; background: white;
-      border-top: 1px solid #f0ebe5;
+      width: 100%; max-width: 720px; display: flex; gap: 8px; padding: 10px 16px;
+      overflow-x: auto; background: white; border-top: 1px solid #f0ebe5;
       position: sticky; bottom: 68px; scrollbar-width: none;
       transition: background 0.3s, border-color 0.3s;
     }
     body.dark #occasion-bar { background: #16213e; border-color: #0f3460; }
     #occasion-bar::-webkit-scrollbar { display: none; }
     .occ-btn {
-      background: #faf8f5; border: 1.5px solid #e8e0d8;
-      border-radius: 20px; padding: 7px 14px; font-size: 12px;
-      cursor: pointer; white-space: nowrap;
-      font-family: 'Inter', sans-serif; color: #1a1a2e;
-      font-weight: 500; transition: all 0.2s;
+      background: #faf8f5; border: 1.5px solid #e8e0d8; border-radius: 20px; padding: 7px 14px;
+      font-size: 12px; cursor: pointer; white-space: nowrap; font-family: 'Inter', sans-serif;
+      color: #1a1a2e; font-weight: 500; transition: all 0.2s;
     }
     body.dark .occ-btn { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
-    .occ-btn:hover {
-      background: #1a1a2e; color: white; border-color: #1a1a2e;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(26,26,46,0.2);
-    }
+    .occ-btn:hover { background: #1a1a2e; color: white; border-color: #1a1a2e; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,26,46,0.2); }
     #input-area {
-      width: 100%; max-width: 720px;
-      display: flex; gap: 10px; padding: 12px 16px;
-      background: white; border-top: 1px solid #f0ebe5;
-      position: sticky; bottom: 0;
-      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-      transition: background 0.3s, border-color 0.3s;
+      width: 100%; max-width: 720px; display: flex; gap: 10px; padding: 12px 16px;
+      background: white; border-top: 1px solid #f0ebe5; position: sticky; bottom: 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06); transition: background 0.3s, border-color 0.3s;
     }
     body.dark #input-area { background: #16213e; border-color: #0f3460; box-shadow: 0 -4px 20px rgba(0,0,0,0.3); }
     #user-input {
-      flex: 1; padding: 12px 18px;
-      border: 1.5px solid #e8e0d8; border-radius: 24px;
-      font-size: 14px; outline: none;
-      font-family: 'Inter', sans-serif;
+      flex: 1; padding: 12px 18px; border: 1.5px solid #e8e0d8; border-radius: 24px;
+      font-size: 14px; outline: none; font-family: 'Inter', sans-serif;
       background: #faf8f5; color: #1a1a2e; transition: all 0.2s;
     }
     body.dark #user-input { background: #0f3460; border-color: #1a1a2e; color: #e8e0d8; }
@@ -369,37 +460,26 @@
     body.dark #user-input:focus { border-color: #4169e1; background: #0a0a14; }
     #user-input::placeholder { color: #aaa; }
     #send-btn {
-      background: linear-gradient(135deg, #1a1a2e, #0f3460);
-      color: white; border: none; border-radius: 24px;
-      padding: 12px 22px; font-size: 14px; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-weight: 500;
-      transition: all 0.2s;
+      background: linear-gradient(135deg, #1a1a2e, #0f3460); color: white; border: none;
+      border-radius: 24px; padding: 12px 22px; font-size: 14px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 500; transition: all 0.2s;
       box-shadow: 0 2px 10px rgba(15,52,96,0.3);
     }
     #send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(15,52,96,0.4); }
     #send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
     .typing { display: flex; gap: 5px; padding: 16px 18px; align-items: center; }
-    .typing span {
-      width: 7px; height: 7px; background: #c8bfb5;
-      border-radius: 50%; animation: bounce 1.2s infinite;
-    }
+    .typing span { width: 7px; height: 7px; background: #c8bfb5; border-radius: 50%; animation: bounce 1.2s infinite; }
     body.dark .typing span { background: #4169e1; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); }
-      30% { transform: translateY(-6px); }
-    }
+    @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-6px); } }
     .share-btn {
-      margin-top: 10px; display: inline-block;
-      background: #f0ebe5; color: #1a1a2e; border: none;
-      border-radius: 20px; padding: 7px 14px; font-size: 12px;
-      cursor: pointer; font-family: 'Inter', sans-serif;
-      font-weight: 500; transition: all 0.2s;
+      margin-top: 10px; display: inline-block; background: #f0ebe5; color: #1a1a2e;
+      border: none; border-radius: 20px; padding: 7px 14px; font-size: 12px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 500; transition: all 0.2s;
     }
     body.dark .share-btn { background: #0f3460; color: #e8e0d8; }
     .share-btn:hover { background: #1a1a2e; color: white; transform: translateY(-1px); }
-
     @media (max-width: 600px) {
       header h1 { font-size: 18px; }
       header p { font-size: 10px; }
@@ -414,7 +494,7 @@
       #user-input { font-size: 13px; padding: 10px 14px; }
       #send-btn { padding: 10px 16px; font-size: 13px; }
       #chat-container { padding: 16px 12px; }
-      #history-panel { width: 100%; }
+      #history-panel, #prefs-panel { width: 100%; }
     }
   </style>
 </head>
@@ -427,12 +507,46 @@
   </div>
   <div class="header-btns">
     <button id="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
+    <button class="hdr-btn" id="prefs-btn" onclick="openPrefs()">⚙️ Preferences</button>
     <button class="hdr-btn" id="login-btn" onclick="openAuth()">👤 Login / Sign Up</button>
     <button class="hdr-btn" id="history-btn" onclick="openHistory()" style="display:none;">📋 History</button>
     <button class="hdr-btn danger" id="logout-btn" onclick="logout()" style="display:none;">🚪 Logout</button>
   </div>
 </header>
 
+<!-- Quiz Modal -->
+<div id="quiz-modal">
+  <div class="quiz-box">
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div class="quiz-step-label" id="quiz-step-label"></div>
+    <div class="quiz-question" id="quiz-question"></div>
+    <div class="quiz-hint" id="quiz-hint"></div>
+    <div class="quiz-options" id="quiz-options"></div>
+    <button class="quiz-next-btn" id="quiz-next-btn" onclick="quizNext()" style="display:none;">Next →</button>
+    <div class="quiz-skip" onclick="skipQuiz()">Skip for now</div>
+  </div>
+</div>
+
+<!-- Single Pref Edit Modal -->
+<div id="pref-edit-modal">
+  <div class="pref-edit-box">
+    <button class="pref-edit-close" onclick="closePrefEdit()">✕</button>
+    <div class="pref-edit-title" id="pref-edit-title"></div>
+    <div class="quiz-options" id="pref-edit-options"></div>
+    <button class="quiz-next-btn" id="pref-edit-save-btn" onclick="savePrefEdit()" style="display:none;margin-top:16px;">Save ✓</button>
+  </div>
+</div>
+
+<!-- Preferences Panel -->
+<div id="prefs-panel">
+  <div class="prefs-header">
+    <h3>⚙️ My Preferences</h3>
+    <button class="prefs-close" onclick="closePrefs()">✕</button>
+  </div>
+  <div class="prefs-list" id="prefs-list"></div>
+</div>
+
+<!-- Auth Modal -->
 <div id="auth-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeAuth()">✕</button>
@@ -450,6 +564,7 @@
   </div>
 </div>
 
+<!-- History Panel -->
 <div id="history-panel">
   <div class="history-header">
     <h3>✨ My Style History</h3>
@@ -505,12 +620,7 @@
 <div id="occasion-bar"></div>
 
 <div id="input-area">
-  <input
-    type="text"
-    id="user-input"
-    placeholder="Describe your occasion, city, budget..."
-    onkeydown="if(event.key==='Enter') sendMessage()"
-  />
+  <input type="text" id="user-input" placeholder="Describe your occasion, city, budget..." onkeydown="if(event.key==='Enter') sendMessage()"/>
   <button id="send-btn" onclick="sendMessage()">Send ✈</button>
 </div>
 
@@ -522,28 +632,295 @@
   try {
     const _t = localStorage.getItem("sb_token");
     const _u = localStorage.getItem("sb_user");
-    if (_t && _u) {
-      currentToken = _t;
-      currentUser = JSON.parse(_u);
-    }
+    if (_t && _u) { currentToken = _t; currentUser = JSON.parse(_u); }
   } catch(e) {
     localStorage.removeItem("sb_token");
     localStorage.removeItem("sb_user");
   }
 
-  // ── Dark mode ─────────────────────────────────────
+  // ── Dark mode ──────────────────────────────────
   function toggleDark() {
     const isDark = document.body.classList.toggle("dark");
     document.getElementById("dark-toggle").textContent = isDark ? "☀️" : "🌙";
     localStorage.setItem("stylebot_dark", isDark ? "1" : "0");
   }
-
-  // Restore dark mode preference
   if (localStorage.getItem("stylebot_dark") === "1") {
     document.body.classList.add("dark");
     document.getElementById("dark-toggle").textContent = "☀️";
   }
 
+  // ── Style Quiz ─────────────────────────────────
+  const quizSteps = [
+    {
+      key: "city",
+      label: "Step 1 of 5",
+      question: "Which city are you in? 🏙️",
+      hint: "We'll use this for weather-based styling",
+      type: "text",
+      placeholder: "Type your city name"
+    },
+    {
+      key: "gender",
+      label: "Step 2 of 5",
+      question: "Who are you shopping for? 👗",
+      hint: "We'll tailor recommendations accordingly",
+      type: "options",
+      options: ["👩 Women", "👨 Men", "👦 Kids"]
+    },
+    {
+      key: "skinTone",
+      label: "Step 3 of 5",
+      question: "What's your skin tone? 🎨",
+      hint: "We'll suggest colors that suit you best",
+      type: "options",
+      options: ["🌸 Fair", "🌻 Wheatish", "🌿 Dusky", "🌑 Dark"]
+    },
+    {
+      key: "bodyType",
+      label: "Step 4 of 5",
+      question: "What's your body type? 👤",
+      hint: "We'll suggest silhouettes that flatter you",
+      type: "options",
+      options: ["Slim", "Athletic", "Average", "Curvy", "Plus Size"]
+    },
+    {
+      key: "budget",
+      label: "Step 5 of 5",
+      question: "What's your usual budget? 💰",
+      hint: "We'll keep recommendations within your range",
+      type: "options",
+      options: ["Under ₹1,000", "₹1,000 – ₹3,000", "₹3,000 – ₹5,000", "₹5,000 – ₹10,000"]
+    }
+  ];
+
+  let quizStep = 0;
+  let quizAnswers = {};
+  let currentEditKey = null;
+  let currentEditSelected = null;
+
+  function startQuiz() {
+    quizStep = 0;
+    quizAnswers = {};
+    document.getElementById("quiz-modal").classList.add("open");
+    renderQuizStep();
+  }
+
+  function renderQuizStep() {
+    const step = quizSteps[quizStep];
+    // Progress dots
+    const progress = document.getElementById("quiz-progress");
+    progress.innerHTML = quizSteps.map((_, i) =>
+      `<div class="quiz-dot ${i <= quizStep ? "done" : ""}"></div>`
+    ).join("");
+
+    document.getElementById("quiz-step-label").textContent = step.label;
+    document.getElementById("quiz-question").textContent = step.question;
+    document.getElementById("quiz-hint").textContent = step.hint;
+
+    const optionsEl = document.getElementById("quiz-options");
+    optionsEl.innerHTML = "";
+    const nextBtn = document.getElementById("quiz-next-btn");
+
+    if (step.type === "text") {
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.className = "quiz-city-input";
+      inp.placeholder = step.placeholder;
+      inp.id = "quiz-text-input";
+      inp.value = quizAnswers[step.key] || "";
+      inp.oninput = () => { nextBtn.style.display = inp.value.trim() ? "block" : "none"; };
+      optionsEl.appendChild(inp);
+      nextBtn.style.display = (inp.value.trim()) ? "block" : "none";
+      setTimeout(() => inp.focus(), 100);
+    } else {
+      nextBtn.style.display = "none";
+      step.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option" + (quizAnswers[step.key] === opt ? " selected" : "");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          document.querySelectorAll(".quiz-option").forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          quizAnswers[step.key] = opt;
+          setTimeout(() => quizNext(), 300);
+        };
+        optionsEl.appendChild(btn);
+      });
+    }
+  }
+
+  function quizNext() {
+    const step = quizSteps[quizStep];
+    if (step.type === "text") {
+      const val = document.getElementById("quiz-text-input")?.value.trim();
+      if (!val) return;
+      quizAnswers[step.key] = val;
+    }
+    if (quizStep < quizSteps.length - 1) {
+      quizStep++;
+      renderQuizStep();
+    } else {
+      finishQuiz();
+    }
+  }
+
+  function finishQuiz() {
+    document.getElementById("quiz-modal").classList.remove("open");
+    applyQuizAnswers(quizAnswers);
+    localStorage.setItem("stylebot_prefs", JSON.stringify(quizAnswers));
+    localStorage.setItem("stylebot_quiz_done", "1");
+    addMessage("bot", `Perfect! 🎉 I've saved your preferences!\n\nCity: ${quizAnswers.city || "—"}\nShopping for: ${quizAnswers.gender || "—"}\nSkin tone: ${quizAnswers.skinTone || "—"}\nBody type: ${quizAnswers.bodyType || "—"}\nBudget: ${quizAnswers.budget || "—"}\n\nNow just pick an occasion and I'll give you a perfect look! ✨`);
+  }
+
+  function skipQuiz() {
+    document.getElementById("quiz-modal").classList.remove("open");
+    localStorage.setItem("stylebot_quiz_done", "1");
+  }
+
+  function applyQuizAnswers(prefs) {
+    if (prefs.city) {
+      document.getElementById("city-input").value = prefs.city;
+      fetchWeather(prefs.city);
+    }
+    if (prefs.gender) {
+      const g = prefs.gender.toLowerCase();
+      if (g.includes("women")) setGenderByKey("women");
+      else if (g.includes("men")) setGenderByKey("men");
+      else if (g.includes("kids")) setGenderByKey("kids");
+    }
+    if (prefs.skinTone) {
+      const s = prefs.skinTone.toLowerCase();
+      const sel = document.getElementById("skin-tone-select");
+      if (s.includes("fair")) sel.value = "fair";
+      else if (s.includes("wheatish")) sel.value = "wheatish";
+      else if (s.includes("dusky")) sel.value = "dusky";
+      else if (s.includes("dark")) sel.value = "dark";
+    }
+    if (prefs.bodyType) {
+      const b = prefs.bodyType.toLowerCase();
+      const sel = document.getElementById("body-select");
+      ["slim","athletic","average","curvy","plus size"].forEach(v => {
+        if (b.includes(v)) sel.value = v;
+      });
+    }
+    if (prefs.budget) {
+      const b = prefs.budget;
+      let val = 2000;
+      if (b.includes("1,000") && b.includes("Under")) val = 500;
+      else if (b.includes("1,000") && b.includes("3,000")) val = 2000;
+      else if (b.includes("3,000") && b.includes("5,000")) val = 4000;
+      else if (b.includes("5,000") && b.includes("10,000")) val = 7500;
+      currentBudget = val;
+      document.getElementById("budget-slider").value = val;
+      document.getElementById("budget-input").value = val;
+    }
+  }
+
+  function setGenderByKey(gender) {
+    currentGender = gender;
+    document.querySelectorAll(".gender-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById("btn-" + gender).classList.add("active");
+    renderOccasions();
+  }
+
+  // ── Preferences Panel ──────────────────────────
+  const prefsMeta = [
+    { key: "city", label: "City", type: "text", placeholder: "Type your city" },
+    { key: "gender", label: "Shopping For", type: "options", options: ["👩 Women", "👨 Men", "👦 Kids"] },
+    { key: "skinTone", label: "Skin Tone", type: "options", options: ["🌸 Fair", "🌻 Wheatish", "🌿 Dusky", "🌑 Dark"] },
+    { key: "bodyType", label: "Body Type", type: "options", options: ["Slim", "Athletic", "Average", "Curvy", "Plus Size"] },
+    { key: "budget", label: "Budget", type: "options", options: ["Under ₹1,000", "₹1,000 – ₹3,000", "₹3,000 – ₹5,000", "₹5,000 – ₹10,000"] }
+  ];
+
+  function openPrefs() {
+    document.getElementById("prefs-panel").classList.add("open");
+    renderPrefsList();
+  }
+
+  function closePrefs() {
+    document.getElementById("prefs-panel").classList.remove("open");
+  }
+
+  function renderPrefsList() {
+    const prefs = JSON.parse(localStorage.getItem("stylebot_prefs") || "{}");
+    const list = document.getElementById("prefs-list");
+    list.innerHTML = "";
+    prefsMeta.forEach(meta => {
+      const val = prefs[meta.key] || "Not set";
+      const div = document.createElement("div");
+      div.className = "pref-item";
+      div.innerHTML = `
+        <div class="pref-label">${meta.label}</div>
+        <div class="pref-value">${val}</div>
+        <div class="pref-edit">Tap to change →</div>
+      `;
+      div.onclick = () => openPrefEdit(meta.key);
+      list.appendChild(div);
+    });
+  }
+
+  function openPrefEdit(key) {
+    currentEditKey = key;
+    currentEditSelected = null;
+    const meta = prefsMeta.find(m => m.key === key);
+    const prefs = JSON.parse(localStorage.getItem("stylebot_prefs") || "{}");
+    document.getElementById("pref-edit-title").textContent = "Change " + meta.label;
+    const optionsEl = document.getElementById("pref-edit-options");
+    optionsEl.innerHTML = "";
+    const saveBtn = document.getElementById("pref-edit-save-btn");
+
+    if (meta.type === "text") {
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.className = "quiz-city-input";
+      inp.placeholder = meta.placeholder;
+      inp.value = prefs[key] || "";
+      inp.id = "pref-edit-text";
+      inp.oninput = () => {
+        currentEditSelected = inp.value.trim();
+        saveBtn.style.display = inp.value.trim() ? "block" : "none";
+      };
+      optionsEl.appendChild(inp);
+      saveBtn.style.display = prefs[key] ? "block" : "none";
+      currentEditSelected = prefs[key] || "";
+      setTimeout(() => inp.focus(), 100);
+    } else {
+      saveBtn.style.display = "none";
+      meta.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option" + (prefs[key] === opt ? " selected" : "");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          document.querySelectorAll("#pref-edit-options .quiz-option").forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          currentEditSelected = opt;
+          saveBtn.style.display = "block";
+        };
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    document.getElementById("pref-edit-modal").classList.add("open");
+  }
+
+  function closePrefEdit() {
+    document.getElementById("pref-edit-modal").classList.remove("open");
+    currentEditKey = null;
+    currentEditSelected = null;
+  }
+
+  function savePrefEdit() {
+    if (!currentEditKey || !currentEditSelected) return;
+    const prefs = JSON.parse(localStorage.getItem("stylebot_prefs") || "{}");
+    prefs[currentEditKey] = currentEditSelected;
+    localStorage.setItem("stylebot_prefs", JSON.stringify(prefs));
+    applyQuizAnswers(prefs);
+    closePrefEdit();
+    renderPrefsList();
+    addMessage("bot", `✅ Updated! Your ${prefsMeta.find(m => m.key === currentEditKey)?.label || currentEditKey} is now set to "${currentEditSelected}".`);
+  }
+
+  // ── Weather ────────────────────────────────────
   let currentWeather = null;
 
   async function fetchWeather(city) {
@@ -551,10 +928,7 @@
     try {
       const res = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
       const data = await res.json();
-      if (data.temp) {
-        currentWeather = data;
-        showWeatherMessage(data);
-      }
+      if (data.temp) { currentWeather = data; showWeatherMessage(data); }
     } catch(e) {}
   }
 
@@ -578,23 +952,18 @@
   }
 
   function getWeatherEmoji(condition) {
-    const map = {
-      "Clear": "☀️", "Clouds": "☁️", "Rain": "🌧️",
-      "Drizzle": "🌦️", "Thunderstorm": "⛈️",
-      "Snow": "❄️", "Mist": "🌫️", "Haze": "🌫️", "Fog": "🌫️"
-    };
+    const map = { "Clear": "☀️", "Clouds": "☁️", "Rain": "🌧️", "Drizzle": "🌦️", "Thunderstorm": "⛈️", "Snow": "❄️", "Mist": "🌫️", "Haze": "🌫️", "Fog": "🌫️" };
     return map[condition] || "🌤️";
   }
 
-  // ── Color Preview ─────────────────────────────────
+  // ── Color Preview ──────────────────────────────
   const colorMap = {
     "red": "#e74c3c", "crimson": "#dc143c", "maroon": "#800000",
     "pink": "#ff69b4", "rose": "#ff007f", "coral": "#ff6b6b",
     "orange": "#e67e22", "peach": "#ffb347",
     "yellow": "#f1c40f", "gold": "#ffd700", "mustard": "#e3b505",
     "green": "#27ae60", "mint": "#98ff98", "olive": "#808000", "emerald": "#50c878",
-    "blue": "#2980b9", "navy": "#001f5b", "royal blue": "#4169e1",
-    "sky blue": "#87ceeb", "teal": "#008080",
+    "blue": "#2980b9", "navy": "#001f5b", "royal blue": "#4169e1", "sky blue": "#87ceeb", "teal": "#008080",
     "purple": "#8e44ad", "violet": "#ee82ee", "lavender": "#e6e6fa", "mauve": "#e0b0ff",
     "white": "#f5f5f5", "cream": "#fffdd0", "ivory": "#fffff0", "off white": "#faf9f6",
     "black": "#2c2c2c", "charcoal": "#36454f",
@@ -602,39 +971,20 @@
     "brown": "#8b4513", "beige": "#f5f0e8", "tan": "#d2b48c", "camel": "#c19a6b",
     "turquoise": "#40e0d0", "cyan": "#00bcd4",
     "magenta": "#ff00ff", "fuchsia": "#ff0090",
-    "burgundy": "#800020", "wine": "#722f37",
-    "indigo": "#4b0082"
+    "burgundy": "#800020", "wine": "#722f37", "indigo": "#4b0082"
   };
 
   const skinToneGuide = {
-    "fair": {
-      good: ["navy", "royal blue", "blue", "emerald", "green", "burgundy", "wine", "maroon", "purple", "black", "red", "coral", "teal"],
-      avoid: ["white", "cream", "ivory", "beige", "peach"],
-      tip: "Deep and jewel tones create beautiful contrast on fair skin"
-    },
-    "wheatish": {
-      good: ["orange", "coral", "gold", "mustard", "olive", "teal", "turquoise", "pink", "rose", "red", "purple"],
-      avoid: ["pale pink", "lavender", "light yellow"],
-      tip: "Warm and earthy tones complement wheatish skin beautifully"
-    },
-    "dusky": {
-      good: ["yellow", "gold", "orange", "red", "white", "cream", "ivory", "pink", "magenta", "fuchsia", "royal blue", "emerald"],
-      avoid: ["brown", "olive", "dark grey"],
-      tip: "Bright and warm colors make dusky skin glow beautifully"
-    },
-    "dark": {
-      good: ["yellow", "gold", "white", "cream", "red", "orange", "magenta", "fuchsia", "pink", "royal blue", "emerald", "turquoise"],
-      avoid: ["brown", "maroon", "olive", "navy"],
-      tip: "Bold bright colors create stunning contrast on dark skin"
-    }
+    "fair": { good: ["navy","royal blue","blue","emerald","green","burgundy","wine","maroon","purple","black","red","coral","teal"], avoid: ["white","cream","ivory","beige","peach"], tip: "Deep and jewel tones create beautiful contrast on fair skin" },
+    "wheatish": { good: ["orange","coral","gold","mustard","olive","teal","turquoise","pink","rose","red","purple"], avoid: ["pale pink","lavender","light yellow"], tip: "Warm and earthy tones complement wheatish skin beautifully" },
+    "dusky": { good: ["yellow","gold","orange","red","white","cream","ivory","pink","magenta","fuchsia","royal blue","emerald"], avoid: ["brown","olive","dark grey"], tip: "Bright and warm colors make dusky skin glow beautifully" },
+    "dark": { good: ["yellow","gold","white","cream","red","orange","magenta","fuchsia","pink","royal blue","emerald","turquoise"], avoid: ["brown","maroon","olive","navy"], tip: "Bold bright colors create stunning contrast on dark skin" }
   };
 
   function extractColor(text) {
     const lower = text.toLowerCase();
     const colorKeys = Object.keys(colorMap).sort((a, b) => b.length - a.length);
-    for (const color of colorKeys) {
-      if (lower.includes(color)) return { name: color, hex: colorMap[color] };
-    }
+    for (const color of colorKeys) { if (lower.includes(color)) return { name: color, hex: colorMap[color] }; }
     return null;
   }
 
@@ -660,49 +1010,37 @@
       if (colonIdx === -1 || pipeIdx === -1) return;
       const label = line.substring(0, colonIdx).trim();
       const name  = line.substring(colonIdx + 1, pipeIdx).trim();
-      if (["HAIRSTYLE", "MAKEUP", "GROOMING"].includes(label.toUpperCase())) return;
+      if (["HAIRSTYLE","MAKEUP","GROOMING"].includes(label.toUpperCase())) return;
       const color = extractColor(name);
       if (color) detectedColors.push({ label, name, color });
     });
     if (!detectedColors.length) return;
     const skinTone = document.getElementById("skin-tone-select")?.value || "";
-    const skinTones = ["fair", "wheatish", "dusky", "dark"];
+    const skinTones = ["fair","wheatish","dusky","dark"];
     const isDark = document.body.classList.contains("dark");
     const card = document.createElement("div");
-    card.style.cssText = `
-      background: ${isDark ? "#0f3460" : "white"};
-      border: 1px solid ${isDark ? "#1a1a2e" : "#f0ebe5"};
-      border-radius: 14px; padding: 14px; margin-top: 10px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    `;
-    let html = `<div style="font-family:'Playfair Display',serif;font-size:14px;color:${isDark ? "#e8e0d8" : "#1a1a2e"};font-weight:600;margin-bottom:12px;">🎨 Color Preview</div>`;
+    card.style.cssText = `background:${isDark?"#0f3460":"white"};border:1px solid ${isDark?"#1a1a2e":"#f0ebe5"};border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.06);`;
+    let html = `<div style="font-family:'Playfair Display',serif;font-size:14px;color:${isDark?"#e8e0d8":"#1a1a2e"};font-weight:600;margin-bottom:12px;">🎨 Color Preview</div>`;
     detectedColors.slice(0, 3).forEach(item => {
       html += `<div style="margin-bottom:12px;">
         <div style="font-size:10px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">${item.label}</div>
         <div style="display:flex;align-items:center;gap:10px;">
           <div style="width:44px;height:44px;border-radius:10px;background:${item.color.hex};box-shadow:0 2px 8px rgba(0,0,0,0.15);flex-shrink:0;border:1px solid rgba(0,0,0,0.08);"></div>
           <div style="flex:1;">
-            <div style="font-size:13px;font-weight:600;color:${isDark ? "#e8e0d8" : "#1a1a2e"};text-transform:capitalize;margin-bottom:3px;">${item.color.name}</div>
-            ${skinTone ? (() => {
-              const r = getSkinToneRating(item.color.name, skinTone);
-              return `<div style="font-size:11px;color:#888;">${r.rating} For your <strong>${skinTone}</strong> skin: ${r.text}</div>`;
-            })() : `<div style="display:flex;gap:4px;flex-wrap:wrap;">${skinTones.map(st => {
-              const r = getSkinToneRating(item.color.name, st);
-              return `<span style="background:${isDark ? "#1a1a2e" : "#faf8f5"};border:1px solid ${isDark ? "#0f3460" : "#f0ebe5"};border-radius:6px;padding:2px 7px;font-size:10px;color:${isDark ? "#e8e0d8" : "#1a1a2e"};"><span style="font-weight:600;text-transform:capitalize;">${st}</span> ${r.rating}</span>`;
-            }).join("")}</div>`}
+            <div style="font-size:13px;font-weight:600;color:${isDark?"#e8e0d8":"#1a1a2e"};text-transform:capitalize;margin-bottom:3px;">${item.color.name}</div>
+            ${skinTone ? (() => { const r = getSkinToneRating(item.color.name, skinTone); return `<div style="font-size:11px;color:#888;">${r.rating} For your <strong>${skinTone}</strong> skin: ${r.text}</div>`; })() : `<div style="display:flex;gap:4px;flex-wrap:wrap;">${skinTones.map(st => { const r = getSkinToneRating(item.color.name, st); return `<span style="background:${isDark?"#1a1a2e":"#faf8f5"};border:1px solid ${isDark?"#0f3460":"#f0ebe5"};border-radius:6px;padding:2px 7px;font-size:10px;color:${isDark?"#e8e0d8":"#1a1a2e"};"><span style="font-weight:600;text-transform:capitalize;">${st}</span> ${r.rating}</span>`; }).join("")}</div>`}
           </div>
         </div>
       </div>`;
     });
     if (skinTone && skinToneGuide[skinTone]) {
-      html += `<div style="background:${isDark ? "#1a1a2e" : "#faf8f5"};border-radius:10px;padding:8px 12px;font-size:11px;color:${isDark ? "#7eb8f7" : "#0f3460"};margin-top:4px;">
-        💡 <strong>Tip:</strong> ${skinToneGuide[skinTone].tip}
-      </div>`;
+      html += `<div style="background:${isDark?"#1a1a2e":"#faf8f5"};border-radius:10px;padding:8px 12px;font-size:11px;color:${isDark?"#7eb8f7":"#0f3460"};margin-top:4px;">💡 <strong>Tip:</strong> ${skinToneGuide[skinTone].tip}</div>`;
     }
     card.innerHTML = html;
     bubble.appendChild(card);
   }
 
+  // ── System Prompts ─────────────────────────────
   const systemPrompts = {
     women: `You are StyleBot, a warm and expert Indian fashion stylist AI for women.
 
@@ -821,10 +1159,7 @@ Then give a warm closing line.
 
   function getUserId() {
     if (currentUser && currentUser.id) return currentUser.id;
-    try {
-      const u = localStorage.getItem("sb_user");
-      if (u) return JSON.parse(u).id || "anonymous";
-    } catch(e) {}
+    try { const u = localStorage.getItem("sb_user"); if (u) return JSON.parse(u).id || "anonymous"; } catch(e) {}
     return "anonymous";
   }
 
@@ -866,56 +1201,26 @@ Then give a warm closing line.
     const errorEl = document.getElementById("modal-error");
     const successEl = document.getElementById("modal-success");
     const btn = document.getElementById("auth-submit");
-    if (!email || !password) {
-      errorEl.textContent = "Please enter email and password";
-      errorEl.style.display = "block";
-      return;
-    }
+    if (!email || !password) { errorEl.textContent = "Please enter email and password"; errorEl.style.display = "block"; return; }
     btn.textContent = isLogin ? "Logging in..." : "Creating account...";
     btn.disabled = true;
     errorEl.style.display = "none";
     try {
-      const res = await fetch("/api/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: isLogin ? "login" : "signup", email, password })
-      });
+      const res = await fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: isLogin ? "login" : "signup", email, password }) });
       const data = await res.json();
-      if (data.error || data.msg) {
-        errorEl.textContent = data.error?.message || data.msg || "Something went wrong";
-        errorEl.style.display = "block";
-        btn.textContent = isLogin ? "Login" : "Create Account";
-        btn.disabled = false;
-        return;
-      }
-      if (!isLogin) {
-        successEl.textContent = "✅ Account created! You can now login.";
-        successEl.style.display = "block";
-        switchTab("login");
-        btn.textContent = "Login";
-        btn.disabled = false;
-        return;
-      }
-      currentUser = data.user;
-      currentToken = data.access_token;
+      if (data.error || data.msg) { errorEl.textContent = data.error?.message || data.msg || "Something went wrong"; errorEl.style.display = "block"; btn.textContent = isLogin ? "Login" : "Create Account"; btn.disabled = false; return; }
+      if (!isLogin) { successEl.textContent = "✅ Account created! You can now login."; successEl.style.display = "block"; switchTab("login"); btn.textContent = "Login"; btn.disabled = false; return; }
+      currentUser = data.user; currentToken = data.access_token;
       localStorage.setItem("sb_token", currentToken);
       localStorage.setItem("sb_user", JSON.stringify(currentUser));
-      showLoggedIn(email);
-      closeAuth();
+      showLoggedIn(email); closeAuth();
       addMessage("bot", `Welcome back! 🎉 You're logged in as ${email.split("@")[0]}. Your looks are being saved automatically!`);
-    } catch (err) {
-      errorEl.textContent = "Connection error. Please try again.";
-      errorEl.style.display = "block";
-      btn.textContent = isLogin ? "Login" : "Create Account";
-      btn.disabled = false;
-    }
+    } catch (err) { errorEl.textContent = "Connection error. Please try again."; errorEl.style.display = "block"; btn.textContent = isLogin ? "Login" : "Create Account"; btn.disabled = false; }
   }
 
   function logout() {
-    currentUser = null;
-    currentToken = null;
-    localStorage.removeItem("sb_token");
-    localStorage.removeItem("sb_user");
+    currentUser = null; currentToken = null;
+    localStorage.removeItem("sb_token"); localStorage.removeItem("sb_user");
     showLoggedOut();
     addMessage("bot", "You've been logged out. Come back anytime! ✨");
   }
@@ -923,51 +1228,31 @@ Then give a warm closing line.
   async function openHistory() {
     const savedToken = localStorage.getItem("sb_token");
     const savedUser = localStorage.getItem("sb_user");
-    if (savedToken && savedUser) {
-      try { currentToken = savedToken; currentUser = JSON.parse(savedUser); } catch(e) {}
-    }
+    if (savedToken && savedUser) { try { currentToken = savedToken; currentUser = JSON.parse(savedUser); } catch(e) {} }
     document.getElementById("history-panel").classList.add("open");
     const list = document.getElementById("history-list");
     list.innerHTML = '<div class="history-empty">Loading your looks...</div>';
-    if (!currentToken || !currentUser) {
-      list.innerHTML = '<div class="history-empty">Please login to see your history</div>';
-      return;
-    }
+    if (!currentToken || !currentUser) { list.innerHTML = '<div class="history-empty">Please login to see your history</div>'; return; }
     try {
       const configRes = await fetch("/api/config");
       const configData = await configRes.json();
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, {
-        headers: { "apikey": configData.anonKey, "Authorization": "Bearer " + currentToken }
-      });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/chat_history?user_id=eq.${currentUser.id}&order=created_at.desc&limit=20`, { headers: { "apikey": configData.anonKey, "Authorization": "Bearer " + currentToken } });
       const data = await res.json();
-      if (!Array.isArray(data) || !data.length) {
-        list.innerHTML = '<div class="history-empty">No looks saved yet. Start chatting! ✨</div>';
-        return;
-      }
+      if (!Array.isArray(data) || !data.length) { list.innerHTML = '<div class="history-empty">No looks saved yet. Start chatting! ✨</div>'; return; }
       list.innerHTML = "";
       data.forEach(item => {
         const div = document.createElement("div");
         div.className = "history-item";
-        div.innerHTML = `
-          <div class="history-item-q">💬 ${(item.user_message || "").substring(0, 60)}...</div>
-          <div class="history-item-a">${(item.bot_reply || "").substring(0, 120)}...</div>
-          <div class="history-item-date">${new Date(item.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>
-        `;
+        div.innerHTML = `<div class="history-item-q">💬 ${(item.user_message || "").substring(0, 60)}...</div><div class="history-item-a">${(item.bot_reply || "").substring(0, 120)}...</div><div class="history-item-date">${new Date(item.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</div>`;
         list.appendChild(div);
       });
-    } catch (err) {
-      list.innerHTML = '<div class="history-empty">Could not load history. Try again.</div>';
-    }
+    } catch (err) { list.innerHTML = '<div class="history-empty">Could not load history. Try again.</div>'; }
   }
 
   function closeHistory() { document.getElementById("history-panel").classList.remove("open"); }
 
   function getItemEmoji(label) {
-    const emojis = {
-      "OUTFIT": "👗", "FOOTWEAR": "👠", "JEWELLERY": "💍",
-      "BAG": "👜", "MAKEUP": "💄", "HAIRSTYLE": "💇",
-      "ACCESSORY": "⌚", "GROOMING": "💈"
-    };
+    const emojis = { "OUTFIT": "👗", "FOOTWEAR": "👠", "JEWELLERY": "💍", "BAG": "👜", "MAKEUP": "💄", "HAIRSTYLE": "💇", "ACCESSORY": "⌚", "GROOMING": "💈" };
     return emojis[label.toUpperCase()] || "✨";
   }
 
@@ -977,34 +1262,24 @@ Then give a warm closing line.
     if (start === -1 || end === -1) return;
     const itemsText = text.substring(start + 20, end).trim();
     const lines = itemsText.split("\n").filter(l => l.trim() && l.includes("|"));
-    const items = [];
-    let total = 0;
+    const items = []; let total = 0;
     lines.forEach(line => {
-      const pipeIdx = line.lastIndexOf("|");
-      if (pipeIdx === -1) return;
+      const pipeIdx = line.lastIndexOf("|"); if (pipeIdx === -1) return;
       const labelAndName = line.substring(0, pipeIdx).trim();
-      const priceStr     = line.substring(pipeIdx + 1).trim();
-      const colonIdx     = labelAndName.indexOf(":");
-      if (colonIdx === -1) return;
+      const priceStr = line.substring(pipeIdx + 1).trim();
+      const colonIdx = labelAndName.indexOf(":"); if (colonIdx === -1) return;
       const label = labelAndName.substring(0, colonIdx).trim();
-      const name  = labelAndName.substring(colonIdx + 1).trim();
+      const name = labelAndName.substring(colonIdx + 1).trim();
       const price = parseInt(priceStr.replace(/[₹,\s]/g, "")) || 0;
-      items.push({ label, name, price });
-      total += price;
+      items.push({ label, name, price }); total += price;
     });
     if (!items.length) return;
-    const firstItem   = items[0]?.name || "fashion";
-    const searchQuery = encodeURIComponent(firstItem);
+    const searchQuery = encodeURIComponent(items[0]?.name || "fashion");
     const card = document.createElement("div");
     card.className = "shop-card";
     card.innerHTML = `
       <div class="shop-card-title">✨ Your Complete Look</div>
-      ${items.map(item => `
-        <div class="shop-item">
-          <span>${getItemEmoji(item.label)} ${item.name}</span>
-          <span class="shop-item-price">${item.price > 0 ? "₹" + item.price.toLocaleString("en-IN") : "—"}</span>
-        </div>
-      `).join("")}
+      ${items.map(item => `<div class="shop-item"><span>${getItemEmoji(item.label)} ${item.name}</span><span class="shop-item-price">${item.price > 0 ? "₹" + item.price.toLocaleString("en-IN") : "—"}</span></div>`).join("")}
       <div class="shop-total">Estimated Total: ₹${total.toLocaleString("en-IN")}</div>
       <div class="shop-buttons">
         <a class="shop-store-btn btn-myntra" href="https://www.myntra.com/${searchQuery}" target="_blank">🛍️ Myntra</a>
@@ -1019,12 +1294,8 @@ Then give a warm closing line.
 
   function shareShopLook(query) {
     const msg = `✨ Check out my StyleBot look!\n\nShop it:\n• Myntra: https://www.myntra.com/${query}\n• Amazon: https://www.amazon.in/s?k=${query}\n\nGet your look: https://stylebot-three.vercel.app`;
-    if (navigator.share) {
-      navigator.share({ title: "My StyleBot Look ✨", text: msg }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(msg);
-      alert("Copied! Paste anywhere to share.");
-    }
+    if (navigator.share) { navigator.share({ title: "My StyleBot Look ✨", text: msg }).catch(() => {}); }
+    else { navigator.clipboard.writeText(msg); alert("Copied! Paste anywhere to share."); }
   }
 
   function setGender(gender, btn) {
@@ -1054,43 +1325,37 @@ Then give a warm closing line.
 
   function updateBudgetFromInput(value) {
     const v = parseInt(value);
-    if (v >= 500 && v <= 10000) {
-      currentBudget = v;
-      document.getElementById("budget-slider").value = currentBudget;
-      syncBudgetToDescribe();
-    }
+    if (v >= 500 && v <= 10000) { currentBudget = v; document.getElementById("budget-slider").value = currentBudget; syncBudgetToDescribe(); }
   }
 
   function syncBudgetToDescribe() {
     const input = document.getElementById("user-input");
-    if (input.value.includes("budget ₹")) {
-      input.value = input.value.replace(/budget ₹[\d,]+/, "budget ₹" + currentBudget.toLocaleString("en-IN"));
-    }
+    if (input.value.includes("budget ₹")) { input.value = input.value.replace(/budget ₹[\d,]+/, "budget ₹" + currentBudget.toLocaleString("en-IN")); }
   }
 
   function rebuildDescribe() {
-    const input    = document.getElementById("user-input");
+    const input = document.getElementById("user-input");
     if (!input.value) return;
-    const city     = document.getElementById("city-input").value.trim();
+    const city = document.getElementById("city-input").value.trim();
     const skinTone = document.getElementById("skin-tone-select").value;
-    const body     = document.getElementById("body-select").value;
+    const body = document.getElementById("body-select").value;
     let base = input.value.replace(/, budget ₹[\d,]+.*$/, "").trim();
     base += ", budget ₹" + currentBudget.toLocaleString("en-IN");
-    if (city)     base += ", in " + city;
+    if (city) base += ", in " + city;
     if (skinTone) base += ", skin tone: " + skinTone;
-    if (body)     base += ", body type: " + body;
+    if (body) base += ", body type: " + body;
     input.value = base;
   }
 
   function fillOccasion(text) {
-    const input    = document.getElementById("user-input");
-    const city     = document.getElementById("city-input").value.trim();
+    const input = document.getElementById("user-input");
+    const city = document.getElementById("city-input").value.trim();
     const skinTone = document.getElementById("skin-tone-select").value;
-    const body     = document.getElementById("body-select").value;
+    const body = document.getElementById("body-select").value;
     let details = text + ", budget ₹" + currentBudget.toLocaleString("en-IN");
-    if (city)     details += ", in " + city;
+    if (city) details += ", in " + city;
     if (skinTone) details += ", skin tone: " + skinTone;
-    if (body)     details += ", body type: " + body;
+    if (body) details += ", body type: " + body;
     input.value = details;
     input.focus();
   }
@@ -1098,13 +1363,7 @@ Then give a warm closing line.
   function getSkinTypePrompt() {
     const skinType = document.getElementById("skin-type-select").value;
     if (!skinType) return "";
-    const tips = {
-      oily:        "suggest matte finish, oil-free, non-comedogenic makeup products",
-      dry:         "suggest hydrating, moisturizing, dewy finish makeup products",
-      combination: "suggest oil-control on T-zone, hydration on dry areas",
-      sensitive:   "suggest fragrance-free, hypoallergenic, gentle makeup products only",
-      normal:      "suggest balanced, gentle products suitable for normal skin"
-    };
+    const tips = { oily: "suggest matte finish, oil-free, non-comedogenic makeup products", dry: "suggest hydrating, moisturizing, dewy finish makeup products", combination: "suggest oil-control on T-zone, hydration on dry areas", sensitive: "suggest fragrance-free, hypoallergenic, gentle makeup products only", normal: "suggest balanced, gentle products suitable for normal skin" };
     return `\n\nUser's skin type is ${skinType}. For makeup: ${tips[skinType]}.`;
   }
 
@@ -1131,13 +1390,8 @@ Then give a warm closing line.
       shareBtn.textContent = "📤 Share this look";
       shareBtn.onclick = async () => {
         const msg = "✨ StyleBot gave me this look!\n\n" + text.replace(/STYLEBOT_ITEMS_START[\s\S]*?STYLEBOT_ITEMS_END/g, "").trim() + "\n\nTry it: https://stylebot-three.vercel.app";
-        if (navigator.share) {
-          try { await navigator.share({ title: "My StyleBot Look ✨", text: msg }); } catch(e) {}
-        } else {
-          navigator.clipboard.writeText(msg);
-          shareBtn.textContent = "✅ Copied!";
-          setTimeout(() => shareBtn.textContent = "📤 Share this look", 2000);
-        }
+        if (navigator.share) { try { await navigator.share({ title: "My StyleBot Look ✨", text: msg }); } catch(e) {} }
+        else { navigator.clipboard.writeText(msg); shareBtn.textContent = "✅ Copied!"; setTimeout(() => shareBtn.textContent = "📤 Share this look", 2000); }
       };
       bubble.appendChild(shareBtn);
     }
@@ -1150,24 +1404,17 @@ Then give a warm closing line.
   function addTyping() {
     const container = document.getElementById("chat-container");
     const div = document.createElement("div");
-    div.className = "message bot";
-    div.id = "typing-indicator";
+    div.className = "message bot"; div.id = "typing-indicator";
     const avatar = document.createElement("div");
-    avatar.className = "avatar bot-avatar";
-    avatar.textContent = "✨";
+    avatar.className = "avatar bot-avatar"; avatar.textContent = "✨";
     const bubble = document.createElement("div");
     bubble.className = "bubble bot-bubble typing";
     bubble.innerHTML = "<span></span><span></span><span></span>";
-    div.appendChild(avatar);
-    div.appendChild(bubble);
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
+    div.appendChild(avatar); div.appendChild(bubble);
+    container.appendChild(div); container.scrollTop = container.scrollHeight;
   }
 
-  function removeTyping() {
-    const el = document.getElementById("typing-indicator");
-    if (el) el.remove();
-  }
+  function removeTyping() { const el = document.getElementById("typing-indicator"); if (el) el.remove(); }
 
   async function sendMessage() {
     const input = document.getElementById("user-input");
@@ -1176,9 +1423,7 @@ Then give a warm closing line.
     if (!text) return;
     addMessage("user", text);
     messages.push({ role: "user", content: text });
-    input.value = "";
-    btn.disabled = true;
-    addTyping();
+    input.value = ""; btn.disabled = true; addTyping();
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -1193,19 +1438,12 @@ Then give a warm closing line.
         })
       });
       const data = await response.json();
-      if (!data.choices) {
-        addMessage("bot", "API Error: " + JSON.stringify(data));
-        btn.disabled = false;
-        return;
-      }
+      if (!data.choices) { addMessage("bot", "API Error: " + JSON.stringify(data)); btn.disabled = false; return; }
       const reply = data.choices[0].message.content;
       messages.push({ role: "assistant", content: reply });
       removeTyping();
       addMessage("bot", reply);
-    } catch (err) {
-      removeTyping();
-      addMessage("bot", "Sorry, something went wrong. Please try again!");
-    }
+    } catch (err) { removeTyping(); addMessage("bot", "Sorry, something went wrong. Please try again!"); }
     btn.disabled = false;
     input.focus();
   }
@@ -1214,20 +1452,14 @@ Then give a warm closing line.
     const match = this.value.match(/₹\s?([\d,]+)/);
     if (match) {
       const amount = parseInt(match[1].replace(/,/g, ""));
-      if (amount >= 500 && amount <= 10000) {
-        currentBudget = amount;
-        document.getElementById("budget-slider").value = amount;
-        document.getElementById("budget-input").value = amount;
-      }
+      if (amount >= 500 && amount <= 10000) { currentBudget = amount; document.getElementById("budget-slider").value = amount; document.getElementById("budget-input").value = amount; }
     }
   });
 
   document.getElementById("city-input").addEventListener("input", function() {
     rebuildDescribe();
     clearTimeout(this._weatherTimer);
-    this._weatherTimer = setTimeout(() => {
-      if (this.value.trim().length > 2) fetchWeather(this.value.trim());
-    }, 800);
+    this._weatherTimer = setTimeout(() => { if (this.value.trim().length > 2) fetchWeather(this.value.trim()); }, 800);
   });
 
   document.getElementById("skin-tone-select").addEventListener("change", rebuildDescribe);
@@ -1235,7 +1467,20 @@ Then give a warm closing line.
 
   if (currentUser) showLoggedIn(currentUser.email);
 
+  // ── Init ──────────────────────────────────────
   renderOccasions();
+
+  // Restore saved prefs
+  const savedPrefs = localStorage.getItem("stylebot_prefs");
+  if (savedPrefs) {
+    try { applyQuizAnswers(JSON.parse(savedPrefs)); } catch(e) {}
+  }
+
+  // Show quiz only for first time users
+  if (!localStorage.getItem("stylebot_quiz_done")) {
+    setTimeout(() => startQuiz(), 800);
+  }
+
   addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city for live weather, select skin tone for color previews, and get weather-appropriate looks! ☀️🎨");
 </script>
 
