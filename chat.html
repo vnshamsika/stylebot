@@ -406,6 +406,27 @@ body.dark .trend-card-title { color: #e8e0d8; }
 }
 body.dark .trend-card-btn { background: #4169e1; }
 .trend-card-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .menu-wrap { position: relative; }
+#hdr-menu {
+  display: none; position: absolute;
+  top: 44px; right: 0;
+  background: white; border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  min-width: 180px; overflow: hidden; z-index: 200;
+}
+body.dark #hdr-menu { background: #16213e; }
+#hdr-menu.open { display: flex; flex-direction: column; }
+#hdr-menu button {
+  padding: 12px 16px; border: none; background: none;
+  text-align: left; font-size: 13px; cursor: pointer;
+  font-family: 'Inter', sans-serif; color: #1a1a2e;
+  border-bottom: 1px solid #f0ebe5; transition: background 0.2s;
+}
+body.dark #hdr-menu button { color: #e8e0d8; border-color: #0f3460; }
+#hdr-menu button:last-child { border-bottom: none; }
+#hdr-menu button:hover { background: #faf8f5; }
+body.dark #hdr-menu button:hover { background: #0f3460; }
+#hdr-menu button.danger { color: #e74c3c; }
   </style>
 </head>
 <body>
@@ -417,12 +438,17 @@ body.dark .trend-card-btn { background: #4169e1; }
   </div>
   <div class="header-btns">
     <button id="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
-    <button class="hdr-btn" id="saved-btn" onclick="openSaved()">❤️ Saved</button>
-    <button class="hdr-btn" id="trending-btn" onclick="openTrending()">🔥 Trending</button>
-    <button class="hdr-btn" id="prefs-btn" onclick="openPrefs()">⚙️ Preferences</button>
-    <button class="hdr-btn" id="login-btn" onclick="openAuth()">👤 Login / Sign Up</button>
-    <button class="hdr-btn" id="history-btn" onclick="openHistory()" style="display:none;">📋 History</button>
-    <button class="hdr-btn danger" id="logout-btn" onclick="logout()" style="display:none;">🚪 Logout</button>
+    <button class="hdr-btn" id="login-btn" onclick="openAuth()">👤 Login</button>
+    <div class="menu-wrap">
+      <button class="hdr-btn" onclick="toggleMenu()">☰ Menu</button>
+      <div id="hdr-menu">
+        <button onclick="openTrending(); closeMenu();">🔥 Trending</button>
+        <button onclick="openSaved(); closeMenu();">❤️ Saved Looks</button>
+        <button onclick="openPrefs(); closeMenu();">⚙️ Preferences</button>
+        <button id="history-menu-btn" onclick="openHistory(); closeMenu();" style="display:none;">📋 History</button>
+        <button id="logout-menu-btn" onclick="logout(); closeMenu();" style="display:none;" class="danger">🚪 Logout</button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -577,6 +603,17 @@ body.dark .trend-card-btn { background: #4169e1; }
     document.body.classList.add("dark");
     document.getElementById("dark-toggle").textContent = "☀️";
   }
+  function toggleMenu() {
+    document.getElementById("hdr-menu").classList.toggle("open");
+  }
+  function closeMenu() {
+    document.getElementById("hdr-menu").classList.remove("open");
+  }
+  document.addEventListener("click", function(e) {
+    const menu = document.getElementById("hdr-menu");
+    const wrap = document.querySelector(".menu-wrap");
+    if (menu && wrap && !wrap.contains(e.target)) menu.classList.remove("open");
+  });
 
   // ── Style Quiz ─────────────────────────────────
   const quizSteps = [
@@ -1107,15 +1144,14 @@ Then give a warm closing line.
 
   function showLoggedIn(email) {
     document.getElementById("login-btn").style.display = "none";
-    document.getElementById("history-btn").style.display = "block";
-    document.getElementById("logout-btn").style.display = "block";
-    document.getElementById("history-btn").textContent = "📋 " + email.split("@")[0];
+    document.getElementById("history-menu-btn").style.display = "block";
+    document.getElementById("logout-menu-btn").style.display = "block";
   }
 
   function showLoggedOut() {
     document.getElementById("login-btn").style.display = "block";
-    document.getElementById("history-btn").style.display = "none";
-    document.getElementById("logout-btn").style.display = "none";
+    document.getElementById("history-menu-btn").style.display = "none";
+    document.getElementById("logout-menu-btn").style.display = "none";
   }
 
   function openAuth() { document.getElementById("auth-modal").classList.add("open"); }
