@@ -369,108 +369,108 @@
       #user-input { font-size: 13px; padding: 10px 14px; }
       #send-btn { padding: 10px 16px; font-size: 13px; }
       #chat-container { padding: 16px 12px; }
-      #history-panel, #prefs-panel, #saved-panel { width: 100%; }
+      #history-panel, #prefs-panel, #saved-panel, #trending-panel, #calendar-panel { width: 100%; }
     }
     #trending-panel {
-  display: none; position: fixed;
-  top: 0; right: 0; width: 340px; height: 100%;
-  background: white; z-index: 999;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.1);
-  flex-direction: column; transition: background 0.3s;
-}
-body.dark #trending-panel { background: #16213e; }
-#trending-panel.open { display: flex; }
-.trend-banner {
-  background: linear-gradient(135deg, #ff3f6c, #ff6b9d);
-  border-radius: 14px; padding: 14px;
-  margin-bottom: 14px; color: white;
-}
-.trend-banner-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-.trend-banner-sub { font-size: 11px; opacity: 0.9; }
-.trend-card {
-  background: #faf8f5; border: 1px solid #f0ebe5;
-  border-radius: 14px; padding: 14px; margin-bottom: 12px;
-  transition: all 0.2s;
-}
-body.dark .trend-card { background: #0f3460; border-color: #1a1a2e; }
-.trend-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-.trend-card-emoji { font-size: 24px; margin-bottom: 6px; }
-.trend-card-title { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
-body.dark .trend-card-title { color: #e8e0d8; }
-.trend-card-desc { font-size: 11px; color: #888; line-height: 1.5; margin-bottom: 10px; }
-.trend-card-btn {
-  display: inline-block; padding: 7px 14px;
-  background: #1a1a2e; color: white; border: none;
-  border-radius: 20px; font-size: 11px; font-weight: 600;
-  cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
-}
-body.dark .trend-card-btn { background: #4169e1; }
-.trend-card-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-  .menu-wrap { position: relative; }
-#hdr-menu {
-  display: none; position: absolute;
-  top: 44px; right: 0;
-  background: white; border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  min-width: 180px; overflow: hidden; z-index: 200;
-}
-body.dark #hdr-menu { background: #16213e; }
-#hdr-menu.open { display: flex; flex-direction: column; }
-#hdr-menu button {
-  padding: 12px 16px; border: none; background: none;
-  text-align: left; font-size: 13px; cursor: pointer;
-  font-family: 'Inter', sans-serif; color: #1a1a2e;
-  border-bottom: 1px solid #f0ebe5; transition: background 0.2s;
-}
-body.dark #hdr-menu button { color: #e8e0d8; border-color: #0f3460; }
-#hdr-menu button:last-child { border-bottom: none; }
-#hdr-menu button:hover { background: #faf8f5; }
-body.dark #hdr-menu button:hover { background: #0f3460; }
-#hdr-menu button.danger { color: #e74c3c; }
-  #calendar-panel {
-  display: none; position: fixed;
-  top: 0; right: 0; width: 340px; height: 100%;
-  background: white; z-index: 999;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.1);
-  flex-direction: column; transition: background 0.3s;
-}
-body.dark #calendar-panel { background: #16213e; }
-#calendar-panel.open { display: flex; }
-.add-event-form {
-  background: #faf8f5; border-radius: 14px;
-  padding: 14px; margin-bottom: 16px;
-}
-body.dark .add-event-form { background: #0f3460; }
-.event-card {
-  background: #faf8f5; border: 1px solid #f0ebe5;
-  border-radius: 14px; padding: 14px; margin-bottom: 10px;
-  position: relative; transition: all 0.2s;
-}
-body.dark .event-card { background: #0f3460; border-color: #1a1a2e; }
-.event-card.urgent { border-color: #ff3f6c; background: #fff0f4; }
-body.dark .event-card.urgent { background: #2a0f1c; border-color: #ff3f6c; }
-.event-card-name { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
-body.dark .event-card-name { color: #e8e0d8; }
-.event-card-date { font-size: 11px; color: #888; margin-bottom: 8px; }
-.event-card-countdown {
-  display: inline-block; font-size: 10px; font-weight: 600;
-  padding: 3px 10px; border-radius: 12px;
-  background: #f0ebe5; color: #1a1a2e; margin-bottom: 8px;
-}
-.event-card-countdown.urgent { background: #ff3f6c; color: white; }
-.event-card-btns { display: flex; gap: 8px; margin-top: 8px; }
-.event-ask-btn {
-  flex: 1; padding: 7px 10px; border-radius: 18px; border: none;
-  background: #1a1a2e; color: white; font-size: 11px; font-weight: 600;
-  cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
-}
-body.dark .event-ask-btn { background: #4169e1; }
-.event-delete-btn {
-  padding: 7px 10px; border-radius: 18px;
-  border: 1px solid #f0ebe5; background: none;
-  font-size: 11px; cursor: pointer; color: #e74c3c;
-}
-body.dark .event-delete-btn { border-color: #1a1a2e; }
+      display: none; position: fixed;
+      top: 0; right: 0; width: 340px; height: 100%;
+      background: white; z-index: 999;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+      flex-direction: column; transition: background 0.3s;
+    }
+    body.dark #trending-panel { background: #16213e; }
+    #trending-panel.open { display: flex; }
+    .trend-banner {
+      background: linear-gradient(135deg, #ff3f6c, #ff6b9d);
+      border-radius: 14px; padding: 14px;
+      margin-bottom: 14px; color: white;
+    }
+    .trend-banner-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .trend-banner-sub { font-size: 11px; opacity: 0.9; }
+    .trend-card {
+      background: #faf8f5; border: 1px solid #f0ebe5;
+      border-radius: 14px; padding: 14px; margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+    body.dark .trend-card { background: #0f3460; border-color: #1a1a2e; }
+    .trend-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .trend-card-emoji { font-size: 24px; margin-bottom: 6px; }
+    .trend-card-title { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+    body.dark .trend-card-title { color: #e8e0d8; }
+    .trend-card-desc { font-size: 11px; color: #888; line-height: 1.5; margin-bottom: 10px; }
+    .trend-card-btn {
+      display: inline-block; padding: 7px 14px;
+      background: #1a1a2e; color: white; border: none;
+      border-radius: 20px; font-size: 11px; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+    }
+    body.dark .trend-card-btn { background: #4169e1; }
+    .trend-card-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .menu-wrap { position: relative; }
+    #hdr-menu {
+      display: none; position: absolute;
+      top: 44px; right: 0;
+      background: white; border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      min-width: 180px; overflow: hidden; z-index: 200;
+    }
+    body.dark #hdr-menu { background: #16213e; }
+    #hdr-menu.open { display: flex; flex-direction: column; }
+    #hdr-menu button {
+      padding: 12px 16px; border: none; background: none;
+      text-align: left; font-size: 13px; cursor: pointer;
+      font-family: 'Inter', sans-serif; color: #1a1a2e;
+      border-bottom: 1px solid #f0ebe5; transition: background 0.2s;
+    }
+    body.dark #hdr-menu button { color: #e8e0d8; border-color: #0f3460; }
+    #hdr-menu button:last-child { border-bottom: none; }
+    #hdr-menu button:hover { background: #faf8f5; }
+    body.dark #hdr-menu button:hover { background: #0f3460; }
+    #hdr-menu button.danger { color: #e74c3c; }
+    #calendar-panel {
+      display: none; position: fixed;
+      top: 0; right: 0; width: 340px; height: 100%;
+      background: white; z-index: 999;
+      box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+      flex-direction: column; transition: background 0.3s;
+    }
+    body.dark #calendar-panel { background: #16213e; }
+    #calendar-panel.open { display: flex; }
+    .add-event-form {
+      background: #faf8f5; border-radius: 14px;
+      padding: 14px; margin-bottom: 16px;
+    }
+    body.dark .add-event-form { background: #0f3460; }
+    .event-card {
+      background: #faf8f5; border: 1px solid #f0ebe5;
+      border-radius: 14px; padding: 14px; margin-bottom: 10px;
+      position: relative; transition: all 0.2s;
+    }
+    body.dark .event-card { background: #0f3460; border-color: #1a1a2e; }
+    .event-card.urgent { border-color: #ff3f6c; background: #fff0f4; }
+    body.dark .event-card.urgent { background: #2a0f1c; border-color: #ff3f6c; }
+    .event-card-name { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+    body.dark .event-card-name { color: #e8e0d8; }
+    .event-card-date { font-size: 11px; color: #888; margin-bottom: 8px; }
+    .event-card-countdown {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 3px 10px; border-radius: 12px;
+      background: #f0ebe5; color: #1a1a2e; margin-bottom: 8px;
+    }
+    .event-card-countdown.urgent { background: #ff3f6c; color: white; }
+    .event-card-btns { display: flex; gap: 8px; margin-top: 8px; }
+    .event-ask-btn {
+      flex: 1; padding: 7px 10px; border-radius: 18px; border: none;
+      background: #1a1a2e; color: white; font-size: 11px; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+    }
+    body.dark .event-ask-btn { background: #4169e1; }
+    .event-delete-btn {
+      padding: 7px 10px; border-radius: 18px;
+      border: 1px solid #f0ebe5; background: none;
+      font-size: 11px; cursor: pointer; color: #e74c3c;
+    }
+    body.dark .event-delete-btn { border-color: #1a1a2e; }
   </style>
 </head>
 <body>
@@ -528,6 +528,7 @@ body.dark .event-delete-btn { border-color: #1a1a2e; }
   </div>
   <div class="prefs-list" id="prefs-list"></div>
 </div>
+
 <!-- Trending Panel -->
 <div id="trending-panel">
   <div class="prefs-header">
@@ -544,6 +545,22 @@ body.dark .event-delete-btn { border-color: #1a1a2e; }
     <button class="prefs-close" onclick="closeSaved()">✕</button>
   </div>
   <div class="prefs-list" id="saved-list"></div>
+</div>
+
+<!-- Calendar Panel -->
+<div id="calendar-panel">
+  <div class="prefs-header">
+    <h3>📅 My Events</h3>
+    <button class="prefs-close" onclick="closeCalendar()">✕</button>
+  </div>
+  <div class="prefs-list" id="calendar-list">
+    <div class="add-event-form">
+      <input type="text" id="event-name" class="quiz-city-input" placeholder="Event name (e.g. Priya's Wedding)" style="margin-bottom:8px;"/>
+      <input type="date" id="event-date" class="quiz-city-input" style="margin-bottom:8px;"/>
+      <button class="quiz-next-btn" onclick="addEvent()" style="margin-top:0;">+ Add Event</button>
+    </div>
+    <div id="events-display"></div>
+  </div>
 </div>
 
 <!-- Auth Modal -->
@@ -861,21 +878,7 @@ body.dark .event-delete-btn { border-color: #1a1a2e; }
     localStorage.setItem("stylebot_saved", JSON.stringify(looks));
     renderSavedList();
   }
-  <!-- Calendar Panel -->
-<div id="calendar-panel">
-  <div class="prefs-header">
-    <h3>📅 My Events</h3>
-    <button class="prefs-close" onclick="closeCalendar()">✕</button>
-  </div>
-  <div class="prefs-list" id="calendar-list">
-    <div class="add-event-form">
-      <input type="text" id="event-name" class="quiz-city-input" placeholder="Event name (e.g. Priya's Wedding)" style="margin-bottom:8px;"/>
-      <input type="date" id="event-date" class="quiz-city-input" style="margin-bottom:8px;"/>
-      <button class="quiz-next-btn" onclick="addEvent()" style="margin-top:0;">+ Add Event</button>
-    </div>
-    <div id="events-display"></div>
-  </div>
-</div>
+
   // ── Trending Looks ─────────────────────────────────
   function getSeasonData() {
     const month = new Date().getMonth() + 1; // 1-12
@@ -962,6 +965,7 @@ body.dark .event-delete-btn { border-color: #1a1a2e; }
       list.appendChild(div);
     });
   }
+
   // ── Occasion Calendar ──────────────────────────────
   function openCalendar() {
     document.getElementById("calendar-panel").classList.add("open");
@@ -1009,7 +1013,6 @@ body.dark .event-delete-btn { border-color: #1a1a2e; }
     const events = JSON.parse(localStorage.getItem("stylebot_events") || "[]");
     const display = document.getElementById("events-display");
 
-    // Remove past events automatically
     const validEvents = events.filter(e => getDaysUntil(e.date) >= 0);
     if (validEvents.length !== events.length) {
       localStorage.setItem("stylebot_events", JSON.stringify(validEvents));
@@ -1511,7 +1514,6 @@ Then give a warm closing line.
       bubble.textContent = text;
     }
     if (role === "bot" && text.length > 100) {
-      // Share button
       const shareBtn = document.createElement("button");
       shareBtn.className = "share-btn";
       shareBtn.textContent = "📤 Share this look";
@@ -1522,7 +1524,6 @@ Then give a warm closing line.
       };
       bubble.appendChild(shareBtn);
 
-      // Save button
       const saveBtn = document.createElement("button");
       saveBtn.className = "share-btn";
       saveBtn.style.marginLeft = "8px";
