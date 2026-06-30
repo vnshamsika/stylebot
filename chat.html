@@ -1419,7 +1419,7 @@ Then give a warm closing line.
     });
     if (!items.length) return;
     const searchQuery = encodeURIComponent(items[0]?.name || "fashion");
-    fetchProductImage(items[0]?.name || "fashion outfit", card);
+
     const card = document.createElement("div");
     card.className = "shop-card";
     card.innerHTML = `
@@ -1435,7 +1435,10 @@ Then give a warm closing line.
       <button class="shop-share-btn" onclick="shareShopLook('${searchQuery}')">📤 Share this look</button>
     `;
     bubble.appendChild(card);
+
+    fetchProductImage(items[0]?.name || "fashion outfit", card);
   }
+
   async function fetchProductImage(query, card) {
     try {
       const res = await fetch(`/api/image?query=${encodeURIComponent(query + " fashion")}`);
