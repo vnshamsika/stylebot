@@ -371,6 +371,41 @@
       #chat-container { padding: 16px 12px; }
       #history-panel, #prefs-panel, #saved-panel { width: 100%; }
     }
+    #trending-panel {
+  display: none; position: fixed;
+  top: 0; right: 0; width: 340px; height: 100%;
+  background: white; z-index: 999;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+  flex-direction: column; transition: background 0.3s;
+}
+body.dark #trending-panel { background: #16213e; }
+#trending-panel.open { display: flex; }
+.trend-banner {
+  background: linear-gradient(135deg, #ff3f6c, #ff6b9d);
+  border-radius: 14px; padding: 14px;
+  margin-bottom: 14px; color: white;
+}
+.trend-banner-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.trend-banner-sub { font-size: 11px; opacity: 0.9; }
+.trend-card {
+  background: #faf8f5; border: 1px solid #f0ebe5;
+  border-radius: 14px; padding: 14px; margin-bottom: 12px;
+  transition: all 0.2s;
+}
+body.dark .trend-card { background: #0f3460; border-color: #1a1a2e; }
+.trend-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.trend-card-emoji { font-size: 24px; margin-bottom: 6px; }
+.trend-card-title { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 4px; }
+body.dark .trend-card-title { color: #e8e0d8; }
+.trend-card-desc { font-size: 11px; color: #888; line-height: 1.5; margin-bottom: 10px; }
+.trend-card-btn {
+  display: inline-block; padding: 7px 14px;
+  background: #1a1a2e; color: white; border: none;
+  border-radius: 20px; font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: 'Inter', sans-serif; transition: all 0.2s;
+}
+body.dark .trend-card-btn { background: #4169e1; }
+.trend-card-btn:hover { opacity: 0.85; transform: translateY(-1px); }
   </style>
 </head>
 <body>
@@ -383,6 +418,7 @@
   <div class="header-btns">
     <button id="dark-toggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
     <button class="hdr-btn" id="saved-btn" onclick="openSaved()">❤️ Saved</button>
+    <button class="hdr-btn" id="trending-btn" onclick="openTrending()">🔥 Trending</button>
     <button class="hdr-btn" id="prefs-btn" onclick="openPrefs()">⚙️ Preferences</button>
     <button class="hdr-btn" id="login-btn" onclick="openAuth()">👤 Login / Sign Up</button>
     <button class="hdr-btn" id="history-btn" onclick="openHistory()" style="display:none;">📋 History</button>
@@ -420,6 +456,14 @@
     <button class="prefs-close" onclick="closePrefs()">✕</button>
   </div>
   <div class="prefs-list" id="prefs-list"></div>
+</div>
+<!-- Trending Panel -->
+<div id="trending-panel">
+  <div class="prefs-header">
+    <h3 id="trending-title">🔥 Trending Now</h3>
+    <button class="prefs-close" onclick="closeTrending()">✕</button>
+  </div>
+  <div class="prefs-list" id="trending-list"></div>
 </div>
 
 <!-- Saved Looks Panel -->
@@ -734,6 +778,92 @@
     looks = looks.filter(l => l.id !== id);
     localStorage.setItem("stylebot_saved", JSON.stringify(looks));
     renderSavedList();
+  }
+  // ── Trending Looks ─────────────────────────────────
+  function getSeasonData() {
+    const month = new Date().getMonth() + 1; // 1-12
+
+    if (month >= 3 && month <= 5) {
+      return {
+        season: "☀️ Summer 2026",
+        sub: "Beat the heat in style",
+        items: [
+          { emoji: "👗", title: "Linen Co-ord Sets", desc: "Breathable, lightweight and effortlessly chic for summer days", text: "Show me trendy summer linen co-ord set outfits for hot weather" },
+          { emoji: "🩴", title: "Block Heel Sandals", desc: "Comfortable yet stylish — perfect for all-day summer wear", text: "Suggest comfortable block heel sandals for summer" },
+          { emoji: "🌻", title: "Pastel Cotton Kurtis", desc: "Light pastel shades are dominating summer wardrobes this year", text: "Show me trendy pastel cotton kurti designs for summer" },
+          { emoji: "🕶️", title: "Statement Sunglasses", desc: "Oversized frames are the accessory trend of the season", text: "Suggest trendy sunglasses styles for summer outfits" }
+        ]
+      };
+    } else if (month >= 6 && month <= 8) {
+      return {
+        season: "🌧️ Monsoon 2026",
+        sub: "Stay stylish through the rains",
+        items: [
+          { emoji: "👕", title: "Quick-Dry Fabrics", desc: "Polyester blends and synthetic fabrics trending for monsoon", text: "Suggest quick-dry monsoon friendly outfits" },
+          { emoji: "👢", title: "Block Heel Boots", desc: "Waterproof footwear is essential and trending this monsoon", text: "Suggest waterproof block heel boots for monsoon" },
+          { emoji: "☔", title: "Printed Rain Jackets", desc: "Functional and fashionable rain jackets trending in cities", text: "Show me stylish printed rain jacket options" },
+          { emoji: "💄", title: "Waterproof Makeup", desc: "Long-wear, smudge-proof makeup is the monsoon essential", text: "Suggest waterproof makeup tips for monsoon season" }
+        ]
+      };
+    } else if (month >= 9 && month <= 11) {
+      return {
+        season: "🪔 Festive & Wedding Season",
+        sub: "Navratri, Diwali & Wedding looks trending now",
+        items: [
+          { emoji: "✨", title: "Pastel Lehengas", desc: "Soft pastel shades are this year's biggest wedding season trend", text: "Show me trendy pastel lehenga designs for wedding season" },
+          { emoji: "👗", title: "Chikankari Kurtas", desc: "Traditional Lucknowi embroidery making a strong comeback", text: "Suggest trendy chikankari kurta designs" },
+          { emoji: "💍", title: "Statement Jhumkas", desc: "Oversized traditional jhumkas are the festive accessory trend", text: "Suggest trendy statement jhumka earring designs" },
+          { emoji: "🎉", title: "Indo-Western Fusion", desc: "Fusion wear blending traditional and modern is huge this season", text: "Show me trendy indo-western fusion outfit ideas" }
+        ]
+      };
+    } else {
+      return {
+        season: "❄️ Winter 2026",
+        sub: "Cozy layers meet style",
+        items: [
+          { emoji: "🧥", title: "Quilted Jackets", desc: "Quilted and puffer jackets are dominating winter street style", text: "Suggest trendy quilted jacket outfits for winter" },
+          { emoji: "🧣", title: "Statement Scarves", desc: "Oversized printed scarves are the winter accessory of choice", text: "Show me trendy statement scarf styling ideas" },
+          { emoji: "👢", title: "Knee-High Boots", desc: "Boots paired with dresses are trending this winter season", text: "Suggest knee-high boots outfit combinations for winter" },
+          { emoji: "🎄", title: "Velvet Evening Wear", desc: "Rich velvet fabrics trending for winter parties and celebrations", text: "Show me trendy velvet evening wear outfit ideas" }
+        ]
+      };
+    }
+  }
+
+  function openTrending() {
+    document.getElementById("trending-panel").classList.add("open");
+    renderTrending();
+  }
+
+  function closeTrending() {
+    document.getElementById("trending-panel").classList.remove("open");
+  }
+
+  function renderTrending() {
+    const data = getSeasonData();
+    const list = document.getElementById("trending-list");
+    list.innerHTML = `
+      <div class="trend-banner">
+        <div class="trend-banner-title">${data.season}</div>
+        <div class="trend-banner-sub">${data.sub}</div>
+      </div>
+    `;
+    data.items.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "trend-card";
+      div.innerHTML = `
+        <div class="trend-card-emoji">${item.emoji}</div>
+        <div class="trend-card-title">${item.title}</div>
+        <div class="trend-card-desc">${item.desc}</div>
+        <button class="trend-card-btn">Ask StyleBot →</button>
+      `;
+      div.querySelector(".trend-card-btn").onclick = () => {
+        closeTrending();
+        document.getElementById("user-input").value = item.text;
+        sendMessage();
+      };
+      list.appendChild(div);
+    });
   }
 
   // ── Weather ────────────────────────────────────
