@@ -1419,6 +1419,7 @@ Then give a warm closing line.
     });
     if (!items.length) return;
     const searchQuery = encodeURIComponent(items[0]?.name || "fashion");
+    fetchProductImage(items[0]?.name || "fashion outfit", card);
     const card = document.createElement("div");
     card.className = "shop-card";
     card.innerHTML = `
@@ -1434,6 +1435,18 @@ Then give a warm closing line.
       <button class="shop-share-btn" onclick="shareShopLook('${searchQuery}')">📤 Share this look</button>
     `;
     bubble.appendChild(card);
+  }
+  async function fetchProductImage(query, card) {
+    try {
+      const res = await fetch(`/api/image?query=${encodeURIComponent(query + " fashion")}`);
+      const data = await res.json();
+      if (data.imageUrl) {
+        const img = document.createElement("img");
+        img.src = data.imageUrl;
+        img.style.cssText = "width:100%;border-radius:10px;margin-bottom:10px;display:block;max-height:200px;object-fit:cover;";
+        card.insertBefore(img, card.firstChild.nextSibling);
+      }
+    } catch(e) {}
   }
 
   function shareShopLook(query) {
