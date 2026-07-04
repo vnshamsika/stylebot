@@ -1626,6 +1626,11 @@ Then give a warm closing line.
 
   addMessage("bot", "Namaste! 👋 I'm StyleBot, your personal AI fashion stylist.\n\nI style everyone — Women, Men and Kids! 👩👨👦\n\nType your city for live weather, select skin tone for color previews, and get weather-appropriate looks! ☀️🎨");
   setTimeout(() => checkUpcomingEvents(false), 1500);
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js')
+    .then(() => console.log('SW registered'))
+    .catch(e => console.log('SW error', e));
+}
 </script>
 
 </body>
