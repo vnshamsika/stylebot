@@ -1,0 +1,22 @@
+{
+  "name": "StyleBot — AI Fashion Stylist",
+  "short_name": "StyleBot",
+  "description": "Your personal AI fashion stylist for every occasion",
+  "start_url": "/chat.html",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#1a1a2e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://api.dicebear.com/7.x/shapes/svg?seed=stylebot&backgroundColor=0f3460",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "https://api.dicebear.com/7.x/shapes/svg?seed=stylebot&backgroundColor=0f3460",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
