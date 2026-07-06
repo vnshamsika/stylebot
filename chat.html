@@ -1595,7 +1595,14 @@ Then give a warm closing line.
       messages.push({ role: "assistant", content: reply });
       removeTyping();
       addMessage("bot", reply);
-    } catch (err) { removeTyping(); addMessage("bot", "Sorry, something went wrong. Please try again!"); }
+    } catch (err) {
+      removeTyping();
+      if (!navigator.onLine) {
+        addMessage("bot", "📡 You're offline right now. StyleBot needs internet to give you outfit recommendations. Please connect and try again! Your saved looks are still available in the Menu → ❤️ Saved Looks.");
+      } else {
+        addMessage("bot", "Sorry, something went wrong. Please try again!");
+      }
+    }
     btn.disabled = false; input.focus();
   }
 
