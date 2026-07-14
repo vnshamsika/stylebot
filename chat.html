@@ -1111,6 +1111,13 @@
       const days = getDaysUntil(ev.date);
       const when = days === 0 ? "today" : days === 1 ? "tomorrow" : `in ${days} days`;
       addMessage("bot", `📅 Reminder! Your "${ev.name}" is ${when}! Want me to suggest a perfect look for it? Just ask! ✨`);
+
+      // Send push notification
+      if (window.OneSignal) {
+        window.OneSignalDeferred.push(async function(OneSignal) {
+          await OneSignal.Notifications.requestPermission();
+        });
+      }
     });
   }
 
