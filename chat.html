@@ -665,9 +665,9 @@
 
 <div id="gender-bar">
   <span class="gender-label">Shopping for:</span>
-  <button class="gender-btn active" id="btn-women" onclick="setGender('women', this)">👩 Women</button>
-  <button class="gender-btn" id="btn-men" onclick="setGender('men', this)">👨 Men</button>
-  <button class="gender-btn" id="btn-kids" onclick="setGender('kids', this)">👦 Kids</button>
+  <button class="gender-btn active" id="btn-women" onclick="setGender('women', this)">👗 Women</button>
+  <button class="gender-btn" id="btn-men" onclick="setGender('men', this)">👔 Men</button>
+  <button class="gender-btn" id="btn-kids" onclick="setGender('kids', this)">🧸 Kids</button>
 </div>
 
 <div id="budget-bar">
@@ -722,7 +722,7 @@
   // ── Style Quiz ─────────────────────────────────
   const quizSteps = [
     { key: "city", label: "Step 1 of 5", question: "Which city are you in? 🏙️", hint: "We'll use this for weather-based styling", type: "text", placeholder: "Type your city name" },
-    { key: "gender", label: "Step 2 of 5", question: "Who are you shopping for? 👗", hint: "We'll tailor recommendations accordingly", type: "options", options: ["👩 Women", "👨 Men", "👦 Kids"] },
+    { key: "gender", label: "Step 2 of 5", question: "Who are you shopping for? 👗", hint: "We'll tailor recommendations accordingly", type: "options", options: ["👗 Women", "👔 Men", "🧸 Kids"] },
     { key: "skinTone", label: "Step 3 of 5", question: "What's your skin tone? 🎨", hint: "We'll suggest colors that suit you best", type: "options", options: ["🌸 Fair", "🌻 Wheatish", "🌿 Dusky", "🌑 Dark"] },
     { key: "bodyType", label: "Step 4 of 5", question: "What's your body type? 👤", hint: "We'll suggest silhouettes that flatter you", type: "options", options: ["Slim", "Athletic", "Average", "Curvy", "Plus Size"] },
     { key: "budget", label: "Step 5 of 5", question: "What's your usual budget? 💰", hint: "We'll keep recommendations within your range", type: "options", options: ["Under ₹1,000", "₹1,000 – ₹3,000", "₹3,000 – ₹5,000", "₹5,000 – ₹10,000"] }
