@@ -1445,8 +1445,18 @@ Then give a warm closing line.
   function closeHistory() { document.getElementById("history-panel").classList.remove("open"); }
 
   function getItemEmoji(label) {
-    const emojis = { "OUTFIT": "👗", "FOOTWEAR": "👠", "JEWELLERY": "💍", "BAG": "👜", "MAKEUP": "💄", "HAIRSTYLE": "💇", "ACCESSORY": "⌚", "GROOMING": "💈" };
-    return emojis[label.toUpperCase()] || "✨";
+    const l = label.toUpperCase();
+    if (currentGender === "men") {
+      const emojis = { "OUTFIT": "👔", "FOOTWEAR": "👞", "ACCESSORY": "⌚", "GROOMING": "💈" };
+      return emojis[l] || "✨";
+    }
+    if (currentGender === "kids") {
+      const emojis = { "OUTFIT": "🧒", "FOOTWEAR": "👟", "ACCESSORY": "🎒" };
+      return emojis[l] || "✨";
+    }
+    // Women (default)
+    const emojis = { "OUTFIT": "👗", "FOOTWEAR": "👠", "JEWELLERY": "💍", "BAG": "👜", "MAKEUP": "💄", "HAIRSTYLE": "💇" };
+    return emojis[l] || "✨";
   }
 
   function parseAndShowShopCard(text, bubble) {
